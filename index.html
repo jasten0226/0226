@@ -1,0 +1,3016 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>電腦配置工作台</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6f5;
+      --surface: #ffffff;
+      --surface-2: #edf2f0;
+      --surface-3: #f8faf9;
+      --ink: #17211f;
+      --muted: #657370;
+      --line: #d8e0dd;
+      --strong-line: #aebdba;
+      --brand: #007b86;
+      --brand-2: #1d5660;
+      --amber: #bd6b16;
+      --red: #b74458;
+      --green: #22815c;
+      --blue: #2d67a3;
+      --graphite: #1c2523;
+      --shadow: 0 18px 44px rgba(20, 32, 31, 0.12);
+      --radius: 8px;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101513;
+      --surface: #18201e;
+      --surface-2: #202a27;
+      --surface-3: #151b19;
+      --ink: #edf4f1;
+      --muted: #a7b5b1;
+      --line: #33423e;
+      --strong-line: #576966;
+      --brand: #38b8c4;
+      --brand-2: #86dbe2;
+      --amber: #e2a24b;
+      --red: #e27282;
+      --green: #66c690;
+      --blue: #81b9ee;
+      --graphite: #ecf3f0;
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(0, 123, 134, 0.08), transparent 460px),
+        var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft JhengHei", "PingFang TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(190px, auto) 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 12px clamp(14px, 3vw, 34px);
+      background: color-mix(in srgb, var(--surface) 90%, transparent);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--graphite);
+      color: var(--surface);
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+    }
+
+    .live-strip {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .live-pill strong {
+      color: var(--ink);
+    }
+
+    .header-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--strong-line);
+    }
+
+    .btn-primary {
+      border-color: var(--graphite);
+      background: var(--graphite);
+      color: var(--surface);
+    }
+
+    .btn-quiet {
+      background: transparent;
+    }
+
+    .btn-small {
+      min-height: 34px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+
+    .btn.is-active {
+      border-color: var(--brand);
+      background: color-mix(in srgb, var(--brand) 13%, var(--surface));
+      color: var(--brand-2);
+    }
+
+    .btn-danger {
+      border-color: color-mix(in srgb, var(--red) 55%, var(--line));
+      color: var(--red);
+    }
+
+    main {
+      width: min(1540px, 100%);
+      margin: 0 auto;
+      padding: 18px clamp(12px, 2.8vw, 34px) 42px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: minmax(0, 1.18fr) minmax(330px, 0.82fr);
+      gap: 16px;
+      align-items: stretch;
+      margin-bottom: 16px;
+    }
+
+    .command-card,
+    .snapshot-card,
+    .market-panel,
+    .rail-panel,
+    .inspector-panel,
+    .details-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .command-card {
+      position: relative;
+      min-height: 326px;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .command-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(18, 31, 29, 0.94), rgba(18, 31, 29, 0.78) 45%, rgba(18, 31, 29, 0.18)),
+        linear-gradient(180deg, transparent 70%, rgba(18, 31, 29, 0.72));
+    }
+
+    .command-card img {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center right;
+    }
+
+    .command-content {
+      display: grid;
+      gap: 18px;
+      width: min(860px, 100%);
+      padding: clamp(20px, 4vw, 38px);
+      color: #f7fbfa;
+    }
+
+    .eyebrow {
+      width: fit-content;
+      padding: 5px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      color: rgba(247, 251, 250, 0.84);
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 12ch;
+      font-size: clamp(2rem, 5vw, 3.35rem);
+      line-height: 1.04;
+      font-weight: 850;
+    }
+
+    .command-copy {
+      max-width: 620px;
+      color: rgba(247, 251, 250, 0.82);
+      font-size: 1.02rem;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .metric {
+      min-height: 86px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .metric span,
+    .stat span,
+    .field label,
+    .label,
+    .mini-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .metric span {
+      color: rgba(247, 251, 250, 0.7);
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 7px;
+      color: #ffffff;
+      font-size: clamp(1.05rem, 2vw, 1.45rem);
+      line-height: 1.12;
+    }
+
+    .control-grid {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) minmax(180px, 1fr) minmax(150px, 0.74fr);
+      gap: 10px;
+      align-items: end;
+      width: min(830px, 100%);
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .field label,
+    .field .label,
+    .snapshot-card .label {
+      color: color-mix(in srgb, currentColor 72%, transparent);
+    }
+
+    .command-card .field label,
+    .command-card .field .label {
+      color: rgba(247, 251, 250, 0.7);
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"],
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select,
+    input[type="text"],
+    input[type="number"] {
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .command-card select,
+    .command-card input[type="number"] {
+      border-color: rgba(255, 255, 255, 0.24);
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .command-card option {
+      color: #17211f;
+    }
+
+    input[type="range"] {
+      accent-color: var(--brand);
+    }
+
+    .range-head,
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 9px 11px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      color: #f7fbfa;
+    }
+
+    .check-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand);
+    }
+
+    .snapshot-card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .panel-title {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    h2 {
+      font-size: 1.14rem;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    h3 {
+      font-size: 1rem;
+      line-height: 1.3;
+      font-weight: 800;
+    }
+
+    .panel-title span,
+    .muted,
+    .table-note,
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .score-block {
+      display: grid;
+      grid-template-columns: 106px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .score-ring {
+      --score: 0%;
+      display: grid;
+      width: 106px;
+      aspect-ratio: 1;
+      place-items: center;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, var(--surface) 0 58%, transparent 59%),
+        conic-gradient(var(--brand) var(--score), var(--surface-2) 0);
+    }
+
+    .score-ring strong {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .score-ring span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .snapshot-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      align-content: start;
+    }
+
+    .stat {
+      min-height: 72px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.06rem;
+      line-height: 1.2;
+    }
+
+    .preset-row,
+    .summary-actions,
+    .toolbar-actions,
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr) 380px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .rail-panel,
+    .market-panel,
+    .inspector-panel,
+    .details-panel {
+      padding: 16px;
+    }
+
+    .rail-panel,
+    .inspector-panel {
+      position: sticky;
+      top: 76px;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .category-btn {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 64px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+      color: var(--ink);
+      text-align: left;
+    }
+
+    .category-btn.is-active {
+      border-color: var(--brand);
+      background: color-mix(in srgb, var(--brand) 11%, var(--surface));
+    }
+
+    .category-code {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border-radius: var(--radius);
+      background: var(--graphite);
+      color: var(--surface);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .category-main {
+      min-width: 0;
+    }
+
+    .category-main strong,
+    .part-card strong,
+    .selected-name {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .category-main span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .status-badge,
+    .part-badge,
+    .tiny-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .status-badge.good,
+    .part-badge.good,
+    .tiny-badge.good {
+      border-color: color-mix(in srgb, var(--green) 40%, var(--line));
+      background: color-mix(in srgb, var(--green) 11%, var(--surface));
+      color: var(--green);
+    }
+
+    .status-badge.warn,
+    .part-badge.warn,
+    .tiny-badge.warn {
+      border-color: color-mix(in srgb, var(--amber) 45%, var(--line));
+      background: color-mix(in srgb, var(--amber) 13%, var(--surface));
+      color: var(--amber);
+    }
+
+    .status-badge.danger,
+    .part-badge.danger,
+    .tiny-badge.danger {
+      border-color: color-mix(in srgb, var(--red) 44%, var(--line));
+      background: color-mix(in srgb, var(--red) 12%, var(--surface));
+      color: var(--red);
+    }
+
+    .market-toolbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(180px, 0.45fr) minmax(150px, auto);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      padding-left: 38px;
+    }
+
+    .search-wrap::before {
+      content: "⌕";
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-52%);
+      color: var(--muted);
+      font-size: 1.15rem;
+      pointer-events: none;
+    }
+
+    .toolbar-actions {
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    .toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .toggle-pill input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand);
+    }
+
+    .chip-row {
+      margin: 0 0 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 31px;
+      padding: 6px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    button.chip.is-active {
+      border-color: var(--brand);
+      background: color-mix(in srgb, var(--brand) 12%, var(--surface));
+      color: var(--brand-2);
+    }
+
+    .catalog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      min-height: 32px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .part-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 10px;
+      min-height: 360px;
+    }
+
+    .part-card {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 212px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+      color: var(--ink);
+      text-align: left;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .part-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--strong-line);
+    }
+
+    .part-card.is-selected {
+      border-color: var(--brand);
+      background: color-mix(in srgb, var(--brand) 10%, var(--surface));
+    }
+
+    .part-card.is-incompatible {
+      opacity: 0.78;
+    }
+
+    .part-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand-badge {
+      overflow: hidden;
+      max-width: 120px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .part-title {
+      min-width: 0;
+    }
+
+    .part-title strong {
+      font-size: 0.98rem;
+      line-height: 1.28;
+    }
+
+    .part-detail {
+      min-height: 40px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .spec-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      min-height: 62px;
+      align-content: flex-start;
+    }
+
+    .spec-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 27px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .part-bottom {
+      display: grid;
+      gap: 7px;
+      margin-top: auto;
+    }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .price-line strong {
+      font-size: 1.08rem;
+    }
+
+    .fit-meter {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-2);
+    }
+
+    .fit-meter span {
+      display: block;
+      width: var(--fit, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--brand), var(--green));
+    }
+
+    .selected-panel {
+      display: grid;
+      gap: 12px;
+    }
+
+    .selected-card {
+      display: grid;
+      gap: 11px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+    }
+
+    .selected-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .selected-name {
+      font-size: 1.05rem;
+    }
+
+    .selected-specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .price-edit {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+    }
+
+    .status-list,
+    .insight-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .status-item,
+    .insight {
+      display: grid;
+      grid-template-columns: 12px minmax(0, 1fr);
+      gap: 10px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+    }
+
+    .insight {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      margin-top: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .status-item.good,
+    .insight.good {
+      border-color: color-mix(in srgb, var(--green) 35%, var(--line));
+    }
+
+    .status-item.good .status-dot {
+      background: var(--green);
+    }
+
+    .status-item.warn,
+    .insight.warn {
+      border-color: color-mix(in srgb, var(--amber) 38%, var(--line));
+    }
+
+    .status-item.warn .status-dot {
+      background: var(--amber);
+    }
+
+    .status-item.danger,
+    .insight.danger {
+      border-color: color-mix(in srgb, var(--red) 38%, var(--line));
+    }
+
+    .status-item.danger .status-dot {
+      background: var(--red);
+    }
+
+    .status-item p,
+    .insight p {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .cost-bar {
+      display: flex;
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-2);
+      margin: 12px 0 8px;
+    }
+
+    .cost-bar span:nth-child(1) { background: var(--brand); }
+    .cost-bar span:nth-child(2) { background: var(--amber); }
+    .cost-bar span:nth-child(3) { background: var(--red); }
+    .cost-bar span:nth-child(4) { background: var(--green); }
+    .cost-bar span:nth-child(5) { background: var(--blue); }
+
+    .bar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.83rem;
+      font-weight: 800;
+    }
+
+    td {
+      font-size: 0.93rem;
+    }
+
+    .custom-box {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-3);
+    }
+
+    .custom-box summary {
+      padding: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .custom-form {
+      display: grid;
+      gap: 10px;
+      padding: 0 12px 12px;
+    }
+
+    .custom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 300px;
+      padding: 24px;
+      border: 1px dashed var(--strong-line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--graphite);
+      color: var(--surface);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      padding: 14px 2px;
+    }
+
+    .footer-note a {
+      color: var(--brand-2);
+      font-weight: 700;
+    }
+
+    @media (max-width: 1260px) {
+      .app-header {
+        grid-template-columns: 1fr auto;
+      }
+
+      .live-strip {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+
+      .workspace {
+        grid-template-columns: 230px minmax(0, 1fr);
+      }
+
+      .inspector-panel {
+        position: static;
+        grid-column: 1 / -1;
+      }
+
+      .selected-panel {
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .dashboard,
+      .workspace,
+      .details-grid,
+      .selected-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .rail-panel {
+        position: static;
+      }
+
+      .category-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .market-toolbar,
+      .control-grid,
+      .custom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      body {
+        font-size: 15px;
+      }
+
+      .app-header {
+        grid-template-columns: 1fr;
+      }
+
+      .header-actions {
+        justify-content: flex-start;
+      }
+
+      main {
+        padding-inline: 10px;
+      }
+
+      .command-content,
+      .snapshot-card,
+      .rail-panel,
+      .market-panel,
+      .inspector-panel,
+      .details-panel {
+        padding: 12px;
+      }
+
+      .metric-grid,
+      .snapshot-stats,
+      .category-list {
+        grid-template-columns: 1fr;
+      }
+
+      .part-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .app-header,
+      .command-card,
+      .rail-panel,
+      .market-panel,
+      .toast,
+      .footer-note {
+        display: none;
+      }
+
+      main,
+      .workspace,
+      .details-grid {
+        display: block;
+        width: 100%;
+        padding: 0;
+      }
+
+      .snapshot-card,
+      .inspector-panel,
+      .details-panel {
+        margin-bottom: 14px;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand" aria-label="電腦配置工作台">
+      <span class="brand-mark">PC</span>
+      <span>電腦配置工作台</span>
+    </div>
+    <div class="live-strip" aria-label="即時配置摘要">
+      <span class="live-pill">總價 <strong id="navTotal">NT$0</strong></span>
+      <span class="live-pill">適合度 <strong id="navScore">0 分</strong></span>
+      <span class="live-pill">相容性 <strong id="navCompat">檢查中</strong></span>
+      <span class="live-pill">零件庫 <strong id="navCount">0 件</strong></span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-quiet" type="button" id="themeToggle">深色</button>
+      <button class="btn" type="button" id="fixBuild">修正相容</button>
+      <button class="btn btn-primary" type="button" id="optimizeBuild">智慧配單</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="dashboard" aria-label="配置控制台">
+      <div class="command-card">
+        <img src="assets/pc-hero.png" alt="桌上型電腦零件與主機配置工作區">
+        <div class="command-content">
+          <span class="eyebrow">Live PC builder</span>
+          <h1>即時配出完整電腦</h1>
+          <p class="command-copy">選 CPU、主機板、顯卡、電源和機殼時，價格、功耗、相容性、用途適合度會立刻更新。</p>
+
+          <div class="metric-grid" aria-label="主要結果">
+            <div class="metric">
+              <span>目前總價</span>
+              <strong id="heroTotal">NT$0</strong>
+            </div>
+            <div class="metric">
+              <span>相容狀態</span>
+              <strong id="heroCompat">檢查中</strong>
+            </div>
+            <div class="metric">
+              <span>預估負載</span>
+              <strong id="heroLoad">0 W</strong>
+            </div>
+            <div class="metric">
+              <span>建議電源</span>
+              <strong id="heroPsu">0 W</strong>
+            </div>
+          </div>
+
+          <div class="control-grid">
+            <div class="field">
+              <label for="useCase">主要用途</label>
+              <select id="useCase">
+                <option value="gaming">遊戲 / 直播</option>
+                <option value="creator">剪輯 / 創作</option>
+                <option value="ai">AI / 運算</option>
+                <option value="office">文書 / 學習</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="range-head">
+                <label for="budgetRange">預算</label>
+                <strong id="budgetValue">NT$60,000</strong>
+              </div>
+              <input id="budgetRange" type="range" min="16000" max="220000" value="60000" step="1000">
+            </div>
+
+            <label class="check-row" for="includeWindows">
+              <input id="includeWindows" type="checkbox">
+              <span>Windows 授權</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <aside class="snapshot-card" aria-label="配置摘要">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>上方總覽</h2>
+            <span id="summaryLine">正在計算配置狀態。</span>
+          </div>
+        </div>
+
+        <div class="score-block">
+          <div class="score-ring" id="scoreRing">
+            <div>
+              <strong id="scoreValue">0</strong>
+              <span>分</span>
+            </div>
+          </div>
+          <div>
+            <h3 id="scoreTitle">正在評估</h3>
+            <p class="muted" id="scoreCopy">選擇零件後會顯示建議。</p>
+          </div>
+        </div>
+
+        <div class="snapshot-stats">
+          <div class="stat">
+            <span>零件小計</span>
+            <strong id="partsSubtotal">NT$0</strong>
+          </div>
+          <div class="stat">
+            <span>含預留總價</span>
+            <strong id="grandTotal">NT$0</strong>
+          </div>
+          <div class="stat">
+            <span>預算差額</span>
+            <strong id="budgetDelta">NT$0</strong>
+          </div>
+          <div class="stat">
+            <span>電源餘裕</span>
+            <strong id="psuHeadroom">0 W</strong>
+          </div>
+        </div>
+
+        <div>
+          <div class="cost-bar" id="costBar" aria-label="價格分布"></div>
+          <div class="bar-legend" id="barLegend"></div>
+        </div>
+
+        <div class="field">
+          <div class="range-head">
+            <label for="reserveRange">價格浮動預留</label>
+            <strong id="reserveValue">5%</strong>
+          </div>
+          <input id="reserveRange" type="range" min="0" max="15" value="5" step="1">
+        </div>
+
+        <div class="summary-actions">
+          <button class="btn btn-small" type="button" id="copyBuild">複製清單</button>
+          <button class="btn btn-small" type="button" id="downloadBuild">下載報價</button>
+          <button class="btn btn-small" type="button" id="saveBuild">儲存</button>
+          <button class="btn btn-small" type="button" id="printBuild">列印</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="preset-row" id="presetButtons" aria-label="快速方案"></section>
+
+    <section class="workspace" id="builder" aria-label="電腦配置工具">
+      <aside class="rail-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>零件分類</h2>
+            <span id="selectedCount">8 / 8 已選</span>
+          </div>
+        </div>
+        <div class="category-list" id="categoryList"></div>
+      </aside>
+
+      <section class="market-panel" aria-label="市場零件庫">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2 id="activeCategoryTitle">市場零件庫</h2>
+            <span id="activeCategorySubtitle">選擇分類開始配單。</span>
+          </div>
+          <span class="status-badge good" id="categoryFitBadge">即時</span>
+        </div>
+
+        <div class="market-toolbar">
+          <div class="search-wrap">
+            <label class="sr-only" for="partSearch">搜尋零件</label>
+            <input id="partSearch" type="text" placeholder="搜尋型號、平台、容量、顯存、瓦數">
+          </div>
+          <div class="field">
+            <label class="sr-only" for="sortMode">排序</label>
+            <select id="sortMode">
+              <option value="fit">適合度高到低</option>
+              <option value="priceAsc">價格低到高</option>
+              <option value="priceDesc">價格高到低</option>
+              <option value="power">耗電低到高</option>
+              <option value="name">名稱 A 到 Z</option>
+            </select>
+          </div>
+          <div class="toolbar-actions">
+            <label class="toggle-pill" for="onlyCompatible">
+              <input id="onlyCompatible" type="checkbox">
+              <span>只看相容</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="chip-row" id="filterChips"></div>
+        <div class="catalog-meta">
+          <span id="catalogCount">0 件零件</span>
+          <span id="catalogHint">價格可改成店家報價</span>
+        </div>
+        <div class="part-grid" id="partGrid"></div>
+
+        <details class="custom-box">
+          <summary>新增沒有列出的零件</summary>
+          <form class="custom-form" id="customForm">
+            <div class="custom-grid" id="customFields"></div>
+            <div class="summary-actions">
+              <button class="btn btn-primary btn-small" type="submit">加入並選用</button>
+              <button class="btn btn-small btn-danger" type="button" id="clearCustomParts">清除本分類自訂</button>
+            </div>
+          </form>
+        </details>
+      </section>
+
+      <aside class="inspector-panel" aria-label="零件檢查">
+        <div class="selected-panel">
+          <section>
+            <div class="panel-header">
+              <div class="panel-title">
+                <h2>目前選用</h2>
+                <span id="selectedSubtitle">處理器</span>
+              </div>
+            </div>
+            <div id="selectedPanel"></div>
+          </section>
+
+          <section>
+            <div class="panel-header">
+              <div class="panel-title">
+                <h2>相容性</h2>
+                <span id="compatCount">0 個提醒</span>
+              </div>
+            </div>
+            <div class="status-list" id="compatList"></div>
+          </section>
+
+          <section>
+            <div class="panel-header">
+              <div class="panel-title">
+                <h2>建議</h2>
+                <span id="insightCount">0 則建議</span>
+              </div>
+            </div>
+            <div class="insight-list" id="insightList"></div>
+          </section>
+        </div>
+      </aside>
+    </section>
+
+    <section class="details-grid" aria-label="價格明細與清單">
+      <section class="details-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>價格明細</h2>
+            <span>選零件或改價格時，這裡會同步更新。</span>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>類別</th>
+                <th>零件</th>
+                <th>規格重點</th>
+                <th>價格</th>
+                <th>適合度</th>
+              </tr>
+            </thead>
+            <tbody id="priceTable"></tbody>
+          </table>
+        </div>
+        <p class="table-note">價格是新台幣規劃估算，實際金額請依購買當天通路報價修改。</p>
+      </section>
+
+      <section class="details-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>資料狀態</h2>
+            <span>2026-07-22</span>
+          </div>
+        </div>
+        <div class="status-list">
+          <div class="status-item good">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="databaseStatus">已載入零件庫</strong>
+              <p>包含 AM4、AM5、LGA1700、LGA1851、sTR5、RTX 40/50、Radeon RX 7000/9000、Intel Arc、DDR4/DDR5、ATX/SFX 等主流項目。</p>
+            </div>
+          </div>
+          <div class="status-item warn">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div>
+              <strong>純 HTML 限制</strong>
+              <p>瀏覽器直接開啟 HTML 時無法穩定抓取各店即時庫存，價格欄位已做成可即時手動修正。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer-note">
+      規格參考：
+      <a href="https://www.amd.com/en/products/processors/desktops/ryzen/9000-series/amd-ryzen-7-9800x3d.html">AMD Ryzen 9000</a>、
+      <a href="https://www.intel.com/content/www/us/en/products/sku/241060/intel-core-ultra-7-processor-265k-30m-cache-up-to-5-50-ghz/specifications.html">Intel Core Ultra</a>、
+      <a href="https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/">NVIDIA GeForce RTX 50</a>、
+      <a href="https://www.amd.com/en/products/graphics/desktops/radeon/9000-series/amd-radeon-rx-9070xt.html">AMD Radeon RX 9000</a>。
+      市場價格會變動，請以店家當日報價為準。
+    </p>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript>這個配置工具需要啟用 JavaScript 才能即時計算價格、適合度和相容性。</noscript>
+
+  <script>
+    const currency = new Intl.NumberFormat("zh-TW", {
+      style: "currency",
+      currency: "TWD",
+      maximumFractionDigits: 0
+    });
+
+    const categories = [
+      { key: "cpu", label: "處理器", code: "CPU", note: "核心、平台、內顯" },
+      { key: "motherboard", label: "主機板", code: "MB", note: "插槽、晶片組、尺寸" },
+      { key: "gpu", label: "顯示卡", code: "GPU", note: "顯存、功耗、長度" },
+      { key: "memory", label: "記憶體", code: "RAM", note: "DDR 世代、容量" },
+      { key: "storage", label: "儲存", code: "SSD", note: "M.2、SATA、容量" },
+      { key: "psu", label: "電源", code: "PSU", note: "瓦數、ATX 3.x、尺寸" },
+      { key: "case", label: "機殼", code: "CASE", note: "主板尺寸、顯卡長度" },
+      { key: "cooler", label: "散熱", code: "COOL", note: "扣具、高度、水冷排" }
+    ];
+
+    const catalog = {
+      cpu: [
+        part("r5-5600", "AMD", "Ryzen 5 5600", 3500, "6C/12T / AM4 / 65W", { socket: "AM4", memory: ["DDR4"], cores: 6, threads: 12, tdp: 65, boost: 88, igpu: false, vrmNeed: 45, gaming: 62, creator: 48, ai: 38, office: 78 }),
+        part("r7-5700x", "AMD", "Ryzen 7 5700X", 4800, "8C/16T / AM4 / 65W", { socket: "AM4", memory: ["DDR4"], cores: 8, threads: 16, tdp: 65, boost: 95, igpu: false, vrmNeed: 50, gaming: 68, creator: 62, ai: 48, office: 82 }),
+        part("r7-5800x3d", "AMD", "Ryzen 7 5800X3D", 9000, "8C/16T / AM4 / 3D V-Cache", { socket: "AM4", memory: ["DDR4"], cores: 8, threads: 16, tdp: 105, boost: 142, igpu: false, vrmNeed: 68, gaming: 88, creator: 66, ai: 54, office: 78 }),
+        part("r9-5900x", "AMD", "Ryzen 9 5900X", 8500, "12C/24T / AM4 / 105W", { socket: "AM4", memory: ["DDR4"], cores: 12, threads: 24, tdp: 105, boost: 145, igpu: false, vrmNeed: 72, gaming: 75, creator: 82, ai: 62, office: 80 }),
+        part("r5-7500f", "AMD", "Ryzen 5 7500F", 5000, "6C/12T / AM5 / 無內顯", { socket: "AM5", memory: ["DDR5"], cores: 6, threads: 12, tdp: 65, boost: 92, igpu: false, vrmNeed: 45, gaming: 78, creator: 62, ai: 50, office: 82 }),
+        part("r5-7600", "AMD", "Ryzen 5 7600", 6500, "6C/12T / AM5 / 65W", { socket: "AM5", memory: ["DDR5"], cores: 6, threads: 12, tdp: 65, boost: 92, igpu: true, vrmNeed: 45, gaming: 80, creator: 64, ai: 52, office: 88 }),
+        part("r7-7700", "AMD", "Ryzen 7 7700", 7600, "8C/16T / AM5 / 65W", { socket: "AM5", memory: ["DDR5"], cores: 8, threads: 16, tdp: 65, boost: 110, igpu: true, vrmNeed: 58, gaming: 83, creator: 76, ai: 60, office: 90 }),
+        part("r7-7800x3d", "AMD", "Ryzen 7 7800X3D", 11800, "8C/16T / AM5 / 3D V-Cache", { socket: "AM5", memory: ["DDR5"], cores: 8, threads: 16, tdp: 120, boost: 162, igpu: true, vrmNeed: 76, gaming: 97, creator: 78, ai: 66, office: 88 }),
+        part("r5-9600x", "AMD", "Ryzen 5 9600X", 8200, "6C/12T / AM5 / Zen 5", { socket: "AM5", memory: ["DDR5"], cores: 6, threads: 12, tdp: 65, boost: 90, igpu: true, vrmNeed: 50, gaming: 84, creator: 70, ai: 58, office: 90 }),
+        part("r7-9700x", "AMD", "Ryzen 7 9700X", 10800, "8C/16T / AM5 / 65W", { socket: "AM5", memory: ["DDR5"], cores: 8, threads: 16, tdp: 65, boost: 112, igpu: true, vrmNeed: 60, gaming: 89, creator: 84, ai: 72, office: 92 }),
+        part("r7-9800x3d", "AMD", "Ryzen 7 9800X3D", 16500, "8C/16T / AM5 / 120W", { socket: "AM5", memory: ["DDR5"], cores: 8, threads: 16, tdp: 120, boost: 162, igpu: true, vrmNeed: 78, gaming: 100, creator: 82, ai: 70, office: 90 }),
+        part("r9-9900x", "AMD", "Ryzen 9 9900X", 15800, "12C/24T / AM5 / 120W", { socket: "AM5", memory: ["DDR5"], cores: 12, threads: 24, tdp: 120, boost: 160, igpu: true, vrmNeed: 84, gaming: 91, creator: 94, ai: 82, office: 90 }),
+        part("r9-9950x", "AMD", "Ryzen 9 9950X", 22500, "16C/32T / AM5 / 170W", { socket: "AM5", memory: ["DDR5"], cores: 16, threads: 32, tdp: 170, boost: 230, igpu: true, vrmNeed: 96, gaming: 94, creator: 100, ai: 90, office: 92 }),
+        part("r9-9900x3d", "AMD", "Ryzen 9 9900X3D", 21500, "12C/24T / AM5 / 3D V-Cache", { socket: "AM5", memory: ["DDR5"], cores: 12, threads: 24, tdp: 120, boost: 168, igpu: true, vrmNeed: 86, gaming: 98, creator: 94, ai: 84, office: 91 }),
+        part("r9-9950x3d", "AMD", "Ryzen 9 9950X3D", 26000, "16C/32T / AM5 / 3D V-Cache", { socket: "AM5", memory: ["DDR5"], cores: 16, threads: 32, tdp: 170, boost: 230, igpu: true, vrmNeed: 98, gaming: 99, creator: 100, ai: 92, office: 91 }),
+        part("i5-12400f", "Intel", "Core i5-12400F", 3400, "6C/12T / LGA1700 / 無內顯", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 6, threads: 12, tdp: 65, boost: 117, igpu: false, vrmNeed: 46, gaming: 63, creator: 48, ai: 38, office: 80 }),
+        part("i5-13400f", "Intel", "Core i5-13400F", 5200, "10C/16T / LGA1700 / 無內顯", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 10, threads: 16, tdp: 65, boost: 148, igpu: false, vrmNeed: 58, gaming: 72, creator: 66, ai: 54, office: 84 }),
+        part("i5-13600kf", "Intel", "Core i5-13600KF", 8000, "14C/20T / LGA1700 / 無內顯", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 14, threads: 20, tdp: 125, boost: 181, igpu: false, vrmNeed: 76, gaming: 85, creator: 83, ai: 68, office: 88 }),
+        part("i5-14600k", "Intel", "Core i5-14600K", 9600, "14C/20T / LGA1700", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 14, threads: 20, tdp: 125, boost: 181, igpu: true, vrmNeed: 78, gaming: 87, creator: 84, ai: 70, office: 89 }),
+        part("i7-14700k", "Intel", "Core i7-14700K", 13800, "20C/28T / LGA1700 / 高負載", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 20, threads: 28, tdp: 125, boost: 253, igpu: true, vrmNeed: 94, gaming: 92, creator: 95, ai: 80, office: 91 }),
+        part("i9-14900k", "Intel", "Core i9-14900K", 19000, "24C/32T / LGA1700 / 高負載", { socket: "LGA1700", memory: ["DDR4", "DDR5"], cores: 24, threads: 32, tdp: 125, boost: 253, igpu: true, vrmNeed: 98, gaming: 94, creator: 98, ai: 84, office: 91 }),
+        part("cu5-225f", "Intel", "Core Ultra 5 225F", 7600, "10C/10T / LGA1851 / 無內顯", { socket: "LGA1851", memory: ["DDR5"], cores: 10, threads: 10, tdp: 65, boost: 121, igpu: false, vrmNeed: 58, gaming: 77, creator: 72, ai: 62, office: 86 }),
+        part("cu5-245k", "Intel", "Core Ultra 5 245K", 9800, "14C/14T / LGA1851", { socket: "LGA1851", memory: ["DDR5"], cores: 14, threads: 14, tdp: 125, boost: 159, igpu: true, vrmNeed: 74, gaming: 84, creator: 82, ai: 74, office: 90 }),
+        part("cu7-265k", "Intel", "Core Ultra 7 265K", 14800, "20C/20T / LGA1851 / 250W turbo", { socket: "LGA1851", memory: ["DDR5"], cores: 20, threads: 20, tdp: 125, boost: 250, igpu: true, vrmNeed: 94, gaming: 90, creator: 94, ai: 86, office: 92 }),
+        part("cu9-285k", "Intel", "Core Ultra 9 285K", 19800, "24C/24T / LGA1851 / 250W turbo", { socket: "LGA1851", memory: ["DDR5"], cores: 24, threads: 24, tdp: 125, boost: 250, igpu: true, vrmNeed: 98, gaming: 92, creator: 98, ai: 90, office: 92 }),
+        part("tr-7960x", "AMD", "Threadripper 7960X", 53500, "24C/48T / sTR5 / 350W", { socket: "sTR5", memory: ["DDR5"], cores: 24, threads: 48, tdp: 350, boost: 350, igpu: false, vrmNeed: 120, gaming: 75, creator: 100, ai: 92, office: 70 }),
+        part("tr-7970x", "AMD", "Threadripper 7970X", 100000, "32C/64T / sTR5 / 350W", { socket: "sTR5", memory: ["DDR5"], cores: 32, threads: 64, tdp: 350, boost: 350, igpu: false, vrmNeed: 130, gaming: 74, creator: 100, ai: 96, office: 66 })
+      ],
+      motherboard: [
+        part("a520m-ddr4", "AMD", "A520M DDR4", 2200, "AM4 / mATX / DDR4", { socket: "AM4", memory: "DDR4", chipset: "A520", form: "mATX", m2: 1, pcie: "PCIe 3.0", wifi: false, vrm: 45, maxRam: 64, gaming: 52, creator: 46, ai: 42, office: 75 }),
+        part("b550m-wifi", "AMD", "B550M Wi-Fi DDR4", 3300, "AM4 / mATX / 2x M.2", { socket: "AM4", memory: "DDR4", chipset: "B550", form: "mATX", m2: 2, pcie: "PCIe 4.0", wifi: true, vrm: 70, maxRam: 128, gaming: 72, creator: 68, ai: 60, office: 82 }),
+        part("b550-atx", "AMD", "B550 ATX Gaming", 4300, "AM4 / ATX / DDR4", { socket: "AM4", memory: "DDR4", chipset: "B550", form: "ATX", m2: 2, pcie: "PCIe 4.0", wifi: false, vrm: 78, maxRam: 128, gaming: 78, creator: 72, ai: 64, office: 80 }),
+        part("x570s-creator", "AMD", "X570S Creator", 7900, "AM4 / ATX / 高擴充", { socket: "AM4", memory: "DDR4", chipset: "X570S", form: "ATX", m2: 3, pcie: "PCIe 4.0", wifi: true, vrm: 92, maxRam: 128, gaming: 82, creator: 88, ai: 78, office: 78 }),
+        part("a620m-ddr5", "AMD", "A620M DDR5", 2800, "AM5 / mATX / 入門", { socket: "AM5", memory: "DDR5", chipset: "A620", form: "mATX", m2: 1, pcie: "PCIe 4.0", wifi: false, vrm: 58, maxRam: 96, gaming: 62, creator: 56, ai: 54, office: 80 }),
+        part("b650m-wifi", "AMD", "B650M Wi-Fi DDR5", 4300, "AM5 / mATX / 2x M.2", { socket: "AM5", memory: "DDR5", chipset: "B650", form: "mATX", m2: 2, pcie: "PCIe 4.0", wifi: true, vrm: 78, maxRam: 128, gaming: 78, creator: 74, ai: 72, office: 84 }),
+        part("b650-atx", "AMD", "B650 ATX Wi-Fi", 6200, "AM5 / ATX / 3x M.2", { socket: "AM5", memory: "DDR5", chipset: "B650", form: "ATX", m2: 3, pcie: "PCIe 4.0", wifi: true, vrm: 86, maxRam: 192, gaming: 83, creator: 84, ai: 82, office: 82 }),
+        part("b650e-atx", "AMD", "B650E Gen5 ATX", 7600, "AM5 / ATX / PCIe 5.0", { socket: "AM5", memory: "DDR5", chipset: "B650E", form: "ATX", m2: 3, pcie: "PCIe 5.0", wifi: true, vrm: 90, maxRam: 192, gaming: 88, creator: 86, ai: 86, office: 80 }),
+        part("b650i", "AMD", "B650I Mini-ITX Wi-Fi", 7200, "AM5 / Mini-ITX / 2x M.2", { socket: "AM5", memory: "DDR5", chipset: "B650", form: "Mini-ITX", m2: 2, pcie: "PCIe 4.0", wifi: true, vrm: 82, maxRam: 96, gaming: 84, creator: 76, ai: 74, office: 86 }),
+        part("b850m-wifi", "AMD", "B850M Wi-Fi DDR5", 4900, "AM5 / mATX / PCIe 5 SSD", { socket: "AM5", memory: "DDR5", chipset: "B850", form: "mATX", m2: 2, pcie: "PCIe 5.0 SSD", wifi: true, vrm: 82, maxRam: 192, gaming: 82, creator: 80, ai: 80, office: 84 }),
+        part("b850-creator", "AMD", "B850 ATX Creator", 6800, "AM5 / ATX / 新平台", { socket: "AM5", memory: "DDR5", chipset: "B850", form: "ATX", m2: 3, pcie: "PCIe 5.0 SSD", wifi: true, vrm: 88, maxRam: 192, gaming: 86, creator: 88, ai: 86, office: 82 }),
+        part("x670e-workstation", "AMD", "X670E Workstation", 11200, "AM5 / ATX / 高擴充", { socket: "AM5", memory: "DDR5", chipset: "X670E", form: "ATX", m2: 4, pcie: "PCIe 5.0", wifi: true, vrm: 98, maxRam: 192, gaming: 90, creator: 95, ai: 94, office: 78 }),
+        part("x870-atx", "AMD", "X870 ATX Wi-Fi", 8000, "AM5 / ATX / USB4", { socket: "AM5", memory: "DDR5", chipset: "X870", form: "ATX", m2: 4, pcie: "PCIe 5.0", wifi: true, vrm: 94, maxRam: 192, gaming: 90, creator: 92, ai: 92, office: 80 }),
+        part("x870e-creator", "AMD", "X870E Creator", 12800, "AM5 / ATX / 旗艦擴充", { socket: "AM5", memory: "DDR5", chipset: "X870E", form: "ATX", m2: 5, pcie: "PCIe 5.0", wifi: true, vrm: 100, maxRam: 256, gaming: 94, creator: 98, ai: 98, office: 78 }),
+        part("h610m-ddr4", "Intel", "H610M DDR4", 2300, "LGA1700 / mATX / DDR4", { socket: "LGA1700", memory: "DDR4", chipset: "H610", form: "mATX", m2: 1, pcie: "PCIe 4.0", wifi: false, vrm: 45, maxRam: 64, gaming: 52, creator: 45, ai: 42, office: 76 }),
+        part("b660m-ddr4", "Intel", "B660M DDR4", 3300, "LGA1700 / mATX / DDR4", { socket: "LGA1700", memory: "DDR4", chipset: "B660", form: "mATX", m2: 2, pcie: "PCIe 4.0", wifi: false, vrm: 68, maxRam: 128, gaming: 68, creator: 64, ai: 58, office: 80 }),
+        part("b760m-ddr4", "Intel", "B760M Wi-Fi DDR4", 3900, "LGA1700 / mATX / DDR4", { socket: "LGA1700", memory: "DDR4", chipset: "B760", form: "mATX", m2: 2, pcie: "PCIe 4.0", wifi: true, vrm: 74, maxRam: 128, gaming: 72, creator: 68, ai: 62, office: 82 }),
+        part("b760m-ddr5", "Intel", "B760M Wi-Fi DDR5", 4500, "LGA1700 / mATX / DDR5", { socket: "LGA1700", memory: "DDR5", chipset: "B760", form: "mATX", m2: 2, pcie: "PCIe 4.0", wifi: true, vrm: 76, maxRam: 192, gaming: 75, creator: 72, ai: 68, office: 82 }),
+        part("z790-atx", "Intel", "Z790 ATX Performance", 8500, "LGA1700 / ATX / DDR5", { socket: "LGA1700", memory: "DDR5", chipset: "Z790", form: "ATX", m2: 4, pcie: "PCIe 5.0", wifi: true, vrm: 94, maxRam: 192, gaming: 88, creator: 90, ai: 86, office: 80 }),
+        part("z790-creator", "Intel", "Z790 Creator Wi-Fi", 12500, "LGA1700 / ATX / 高負載", { socket: "LGA1700", memory: "DDR5", chipset: "Z790", form: "ATX", m2: 5, pcie: "PCIe 5.0", wifi: true, vrm: 100, maxRam: 192, gaming: 90, creator: 96, ai: 92, office: 78 }),
+        part("b860m-wifi", "Intel", "B860M Wi-Fi DDR5", 4200, "LGA1851 / mATX / DDR5", { socket: "LGA1851", memory: "DDR5", chipset: "B860", form: "mATX", m2: 2, pcie: "PCIe 5.0 SSD", wifi: true, vrm: 78, maxRam: 192, gaming: 78, creator: 76, ai: 76, office: 84 }),
+        part("b860-atx", "Intel", "B860 ATX DDR5", 5900, "LGA1851 / ATX / DDR5", { socket: "LGA1851", memory: "DDR5", chipset: "B860", form: "ATX", m2: 3, pcie: "PCIe 5.0 SSD", wifi: true, vrm: 84, maxRam: 192, gaming: 82, creator: 82, ai: 82, office: 82 }),
+        part("z890-atx", "Intel", "Z890 ATX Wi-Fi", 9000, "LGA1851 / ATX / PCIe 5", { socket: "LGA1851", memory: "DDR5", chipset: "Z890", form: "ATX", m2: 4, pcie: "PCIe 5.0", wifi: true, vrm: 96, maxRam: 256, gaming: 90, creator: 94, ai: 94, office: 80 }),
+        part("z890-creator", "Intel", "Z890 Creator", 14900, "LGA1851 / ATX / 旗艦", { socket: "LGA1851", memory: "DDR5", chipset: "Z890", form: "ATX", m2: 5, pcie: "PCIe 5.0", wifi: true, vrm: 100, maxRam: 256, gaming: 92, creator: 98, ai: 98, office: 78 }),
+        part("z890i", "Intel", "Z890I Mini-ITX", 10500, "LGA1851 / Mini-ITX", { socket: "LGA1851", memory: "DDR5", chipset: "Z890", form: "Mini-ITX", m2: 2, pcie: "PCIe 5.0", wifi: true, vrm: 88, maxRam: 128, gaming: 86, creator: 82, ai: 82, office: 84 }),
+        part("trx50-workstation", "AMD", "TRX50 Workstation", 28000, "sTR5 / E-ATX / 工作站", { socket: "sTR5", memory: "DDR5", chipset: "TRX50", form: "E-ATX", m2: 4, pcie: "PCIe 5.0", wifi: true, vrm: 130, maxRam: 1024, gaming: 70, creator: 100, ai: 98, office: 58 }),
+        part("wrx90-pro", "AMD", "WRX90 Pro Workstation", 42000, "sTR5 / E-ATX / PRO", { socket: "sTR5", memory: "DDR5", chipset: "WRX90", form: "E-ATX", m2: 5, pcie: "PCIe 5.0", wifi: true, vrm: 140, maxRam: 2048, gaming: 66, creator: 100, ai: 100, office: 54 })
+      ],
+      gpu: [
+        part("no-gpu", "None", "暫不安裝獨立顯卡", 0, "使用處理器內顯", { series: "None", vram: 0, watt: 0, length: 0, powerPlug: "None", gaming: 18, creator: 20, ai: 12, office: 70 }),
+        part("arc-a750", "Intel", "Arc A750 8GB", 6200, "8GB / 225W / 1080p", { series: "Arc A", vram: 8, watt: 225, length: 280, powerPlug: "8-pin", gaming: 58, creator: 54, ai: 42, office: 78 }),
+        part("arc-b570", "Intel", "Arc B570 10GB", 7000, "10GB / 150W / 1080p", { series: "Arc B", vram: 10, watt: 150, length: 250, powerPlug: "8-pin", gaming: 64, creator: 58, ai: 48, office: 80 }),
+        part("arc-b580", "Intel", "Arc B580 12GB", 8500, "12GB / 190W / 高值感", { series: "Arc B", vram: 12, watt: 190, length: 270, powerPlug: "8-pin", gaming: 70, creator: 62, ai: 52, office: 80 }),
+        part("rtx-3050", "NVIDIA", "GeForce RTX 3050 8GB", 6500, "8GB / 130W / 入門", { series: "RTX 30", vram: 8, watt: 130, length: 245, powerPlug: "8-pin", gaming: 50, creator: 46, ai: 44, office: 80 }),
+        part("rtx-3060-12", "NVIDIA", "GeForce RTX 3060 12GB", 8200, "12GB / 170W / 1080p", { series: "RTX 30", vram: 12, watt: 170, length: 275, powerPlug: "8-pin", gaming: 60, creator: 56, ai: 58, office: 80 }),
+        part("rtx-4060", "NVIDIA", "GeForce RTX 4060 8GB", 9200, "8GB / 115W / 1080p", { series: "RTX 40", vram: 8, watt: 115, length: 245, powerPlug: "8-pin", gaming: 66, creator: 58, ai: 55, office: 82 }),
+        part("rtx-4060-ti-8", "NVIDIA", "GeForce RTX 4060 Ti 8GB", 12500, "8GB / 160W / 1080p+", { series: "RTX 40", vram: 8, watt: 160, length: 270, powerPlug: "8-pin", gaming: 72, creator: 64, ai: 62, office: 82 }),
+        part("rtx-4060-ti-16", "NVIDIA", "GeForce RTX 4060 Ti 16GB", 15800, "16GB / 165W / 顯存優先", { series: "RTX 40", vram: 16, watt: 165, length: 285, powerPlug: "8-pin", gaming: 73, creator: 68, ai: 74, office: 82 }),
+        part("rtx-4070", "NVIDIA", "GeForce RTX 4070 12GB", 17800, "12GB / 200W / 1440p", { series: "RTX 40", vram: 12, watt: 200, length: 300, powerPlug: "12VHPWR", gaming: 84, creator: 78, ai: 78, office: 82 }),
+        part("rtx-4070-super", "NVIDIA", "GeForce RTX 4070 SUPER 12GB", 19800, "12GB / 220W / 1440p", { series: "RTX 40", vram: 12, watt: 220, length: 300, powerPlug: "12VHPWR", gaming: 88, creator: 82, ai: 80, office: 82 }),
+        part("rtx-4070-ti-super", "NVIDIA", "GeForce RTX 4070 Ti SUPER 16GB", 28000, "16GB / 285W / 1440p 高階", { series: "RTX 40", vram: 16, watt: 285, length: 335, powerPlug: "12VHPWR", gaming: 93, creator: 88, ai: 88, office: 80 }),
+        part("rtx-4080-super", "NVIDIA", "GeForce RTX 4080 SUPER 16GB", 36500, "16GB / 320W / 4K", { series: "RTX 40", vram: 16, watt: 320, length: 340, powerPlug: "12VHPWR", gaming: 97, creator: 92, ai: 91, office: 80 }),
+        part("rtx-4090", "NVIDIA", "GeForce RTX 4090 24GB", 68000, "24GB / 450W / 4K 旗艦", { series: "RTX 40", vram: 24, watt: 450, length: 360, powerPlug: "12VHPWR", gaming: 100, creator: 98, ai: 100, office: 76 }),
+        part("rtx-5050", "NVIDIA", "GeForce RTX 5050 8GB", 8200, "8GB / 入門 RTX 50", { series: "RTX 50", vram: 8, watt: 130, length: 245, powerPlug: "8-pin", gaming: 62, creator: 58, ai: 58, office: 82 }),
+        part("rtx-5060", "NVIDIA", "GeForce RTX 5060 8GB", 10500, "8GB / 145W / 1080p", { series: "RTX 50", vram: 8, watt: 145, length: 250, powerPlug: "8-pin", gaming: 72, creator: 66, ai: 66, office: 82 }),
+        part("rtx-5060-ti-8", "NVIDIA", "GeForce RTX 5060 Ti 8GB", 13800, "8GB / 180W / 1080p 高刷", { series: "RTX 50", vram: 8, watt: 180, length: 280, powerPlug: "8-pin", gaming: 78, creator: 70, ai: 68, office: 82 }),
+        part("rtx-5060-ti-16", "NVIDIA", "GeForce RTX 5060 Ti 16GB", 16900, "16GB / 180W / 顯存優先", { series: "RTX 50", vram: 16, watt: 180, length: 285, powerPlug: "8-pin", gaming: 80, creator: 76, ai: 82, office: 82 }),
+        part("rtx-5070", "NVIDIA", "GeForce RTX 5070 12GB", 22900, "12GB / 250W / 1440p", { series: "RTX 50", vram: 12, watt: 250, length: 310, powerPlug: "12V-2x6", gaming: 90, creator: 86, ai: 86, office: 80 }),
+        part("rtx-5070-ti", "NVIDIA", "GeForce RTX 5070 Ti 16GB", 31500, "16GB / 300W / 1440p 高階", { series: "RTX 50", vram: 16, watt: 300, length: 335, powerPlug: "12V-2x6", gaming: 95, creator: 92, ai: 92, office: 80 }),
+        part("rtx-5080", "NVIDIA", "GeForce RTX 5080 16GB", 48000, "16GB / 360W / 4K", { series: "RTX 50", vram: 16, watt: 360, length: 360, powerPlug: "12V-2x6", gaming: 99, creator: 96, ai: 96, office: 78 }),
+        part("rtx-5090", "NVIDIA", "GeForce RTX 5090 32GB", 108000, "32GB / 575W / 旗艦", { series: "RTX 50", vram: 32, watt: 575, length: 380, powerPlug: "12V-2x6", gaming: 100, creator: 100, ai: 100, office: 72 }),
+        part("rx-6600", "AMD", "Radeon RX 6600 8GB", 5600, "8GB / 132W / 入門", { series: "RX 6000", vram: 8, watt: 132, length: 240, powerPlug: "8-pin", gaming: 54, creator: 44, ai: 34, office: 80 }),
+        part("rx-7600", "AMD", "Radeon RX 7600 8GB", 7500, "8GB / 165W / 1080p", { series: "RX 7000", vram: 8, watt: 165, length: 245, powerPlug: "8-pin", gaming: 63, creator: 50, ai: 40, office: 80 }),
+        part("rx-7600-xt", "AMD", "Radeon RX 7600 XT 16GB", 9800, "16GB / 190W / 1080p", { series: "RX 7000", vram: 16, watt: 190, length: 275, powerPlug: "8-pin", gaming: 68, creator: 56, ai: 48, office: 80 }),
+        part("rx-7700-xt", "AMD", "Radeon RX 7700 XT 12GB", 13500, "12GB / 245W / 1440p", { series: "RX 7000", vram: 12, watt: 245, length: 300, powerPlug: "8-pin", gaming: 78, creator: 62, ai: 54, office: 80 }),
+        part("rx-7800-xt", "AMD", "Radeon RX 7800 XT 16GB", 16500, "16GB / 263W / 1440p", { series: "RX 7000", vram: 16, watt: 263, length: 302, powerPlug: "2x8-pin", gaming: 84, creator: 70, ai: 64, office: 80 }),
+        part("rx-7900-gre", "AMD", "Radeon RX 7900 GRE 16GB", 19000, "16GB / 260W / 1440p+", { series: "RX 7000", vram: 16, watt: 260, length: 320, powerPlug: "2x8-pin", gaming: 88, creator: 74, ai: 68, office: 80 }),
+        part("rx-7900-xt", "AMD", "Radeon RX 7900 XT 20GB", 26000, "20GB / 315W / 4K", { series: "RX 7000", vram: 20, watt: 315, length: 330, powerPlug: "2x8-pin", gaming: 93, creator: 80, ai: 74, office: 78 }),
+        part("rx-7900-xtx", "AMD", "Radeon RX 7900 XTX 24GB", 33000, "24GB / 355W / 4K", { series: "RX 7000", vram: 24, watt: 355, length: 345, powerPlug: "2x8-pin", gaming: 95, creator: 84, ai: 78, office: 78 }),
+        part("rx-9060-xt-8", "AMD", "Radeon RX 9060 XT 8GB", 10500, "8GB / 150W / 1080p", { series: "RX 9000", vram: 8, watt: 150, length: 250, powerPlug: "8-pin", gaming: 72, creator: 60, ai: 50, office: 82 }),
+        part("rx-9060-xt-16", "AMD", "Radeon RX 9060 XT 16GB", 13500, "16GB / 165W / 1080p+", { series: "RX 9000", vram: 16, watt: 165, length: 270, powerPlug: "8-pin", gaming: 77, creator: 66, ai: 62, office: 82 }),
+        part("rx-9070", "AMD", "Radeon RX 9070 16GB", 20500, "16GB / 220W / 1440p", { series: "RX 9000", vram: 16, watt: 220, length: 305, powerPlug: "2x8-pin", gaming: 90, creator: 76, ai: 70, office: 80 }),
+        part("rx-9070-xt", "AMD", "Radeon RX 9070 XT 16GB", 24500, "16GB / 304W / 1440p 高階", { series: "RX 9000", vram: 16, watt: 304, length: 330, powerPlug: "2x8-pin", gaming: 94, creator: 82, ai: 76, office: 80 })
+      ],
+      memory: [
+        part("ddr4-16-3200", "Kingston", "16GB DDR4-3200", 1200, "2x8GB / DDR4", { type: "DDR4", capacity: 16, sticks: "2x8GB", speed: 3200, gaming: 55, creator: 44, ai: 36, office: 78 }),
+        part("ddr4-32-3200", "Kingston", "32GB DDR4-3200", 2300, "2x16GB / DDR4", { type: "DDR4", capacity: 32, sticks: "2x16GB", speed: 3200, gaming: 72, creator: 70, ai: 60, office: 88 }),
+        part("ddr4-64-3600", "G.Skill", "64GB DDR4-3600", 4800, "2x32GB / DDR4", { type: "DDR4", capacity: 64, sticks: "2x32GB", speed: 3600, gaming: 80, creator: 88, ai: 76, office: 90 }),
+        part("ddr5-16-5600", "Crucial", "16GB DDR5-5600", 1800, "2x8GB / DDR5", { type: "DDR5", capacity: 16, sticks: "2x8GB", speed: 5600, gaming: 60, creator: 48, ai: 42, office: 80 }),
+        part("ddr5-32-5600", "Crucial", "32GB DDR5-5600", 2900, "2x16GB / DDR5", { type: "DDR5", capacity: 32, sticks: "2x16GB", speed: 5600, gaming: 78, creator: 76, ai: 68, office: 88 }),
+        part("ddr5-32-6000", "G.Skill", "32GB DDR5-6000 CL30", 3400, "2x16GB / DDR5-6000", { type: "DDR5", capacity: 32, sticks: "2x16GB", speed: 6000, gaming: 86, creator: 80, ai: 72, office: 90 }),
+        part("ddr5-48-6000", "Corsair", "48GB DDR5-6000", 5200, "2x24GB / DDR5", { type: "DDR5", capacity: 48, sticks: "2x24GB", speed: 6000, gaming: 88, creator: 88, ai: 82, office: 90 }),
+        part("ddr5-64-5600", "Crucial", "64GB DDR5-5600", 6200, "2x32GB / DDR5", { type: "DDR5", capacity: 64, sticks: "2x32GB", speed: 5600, gaming: 86, creator: 92, ai: 86, office: 90 }),
+        part("ddr5-64-6000", "G.Skill", "64GB DDR5-6000 CL30", 7000, "2x32GB / DDR5-6000", { type: "DDR5", capacity: 64, sticks: "2x32GB", speed: 6000, gaming: 90, creator: 95, ai: 90, office: 90 }),
+        part("ddr5-96-5600", "Crucial", "96GB DDR5-5600", 10800, "2x48GB / 大容量", { type: "DDR5", capacity: 96, sticks: "2x48GB", speed: 5600, gaming: 88, creator: 99, ai: 96, office: 88 }),
+        part("ddr5-96-6000", "Corsair", "96GB DDR5-6000", 12200, "2x48GB / 大容量", { type: "DDR5", capacity: 96, sticks: "2x48GB", speed: 6000, gaming: 90, creator: 100, ai: 98, office: 88 }),
+        part("ddr5-128-5600", "Kingston", "128GB DDR5-5600", 16500, "4x32GB / 工作站", { type: "DDR5", capacity: 128, sticks: "4x32GB", speed: 5600, gaming: 86, creator: 100, ai: 100, office: 82 }),
+        part("ddr5-192-5200", "Corsair", "192GB DDR5-5200", 28500, "4x48GB / 大型專案", { type: "DDR5", capacity: 192, sticks: "4x48GB", speed: 5200, gaming: 82, creator: 100, ai: 100, office: 78 })
+      ],
+      storage: [
+        part("sata-1tb", "Crucial", "1TB SATA SSD", 1700, "1TB / SATA", { type: "SATA", capacity: 1, interface: "SATA", gaming: 58, creator: 55, ai: 50, office: 78 }),
+        part("sata-2tb", "Samsung", "2TB SATA SSD", 3200, "2TB / SATA", { type: "SATA", capacity: 2, interface: "SATA", gaming: 66, creator: 66, ai: 60, office: 82 }),
+        part("sata-4tb", "Crucial", "4TB SATA SSD", 7200, "4TB / SATA", { type: "SATA", capacity: 4, interface: "SATA", gaming: 72, creator: 80, ai: 74, office: 84 }),
+        part("nvme-500g-gen3", "WD", "500GB NVMe Gen3", 1100, "500GB / M.2", { type: "M.2", capacity: 0.5, interface: "PCIe 3.0", gaming: 56, creator: 48, ai: 44, office: 78 }),
+        part("nvme-1tb-gen3", "Kingston", "1TB NVMe Gen3", 1700, "1TB / M.2 Gen3", { type: "M.2", capacity: 1, interface: "PCIe 3.0", gaming: 68, creator: 62, ai: 58, office: 82 }),
+        part("nvme-1tb-gen4", "WD", "1TB NVMe Gen4", 2300, "1TB / M.2 Gen4", { type: "M.2", capacity: 1, interface: "PCIe 4.0", gaming: 76, creator: 70, ai: 66, office: 84 }),
+        part("nvme-2tb-gen4", "Samsung", "2TB NVMe Gen4", 3900, "2TB / M.2 Gen4", { type: "M.2", capacity: 2, interface: "PCIe 4.0", gaming: 88, creator: 84, ai: 80, office: 88 }),
+        part("nvme-4tb-gen4", "Samsung", "4TB NVMe Gen4", 7600, "4TB / M.2 Gen4", { type: "M.2", capacity: 4, interface: "PCIe 4.0", gaming: 92, creator: 94, ai: 90, office: 88 }),
+        part("nvme-8tb-gen4", "Sabrent", "8TB NVMe Gen4", 19000, "8TB / M.2 Gen4", { type: "M.2", capacity: 8, interface: "PCIe 4.0", gaming: 92, creator: 100, ai: 98, office: 84 }),
+        part("nvme-1tb-gen5", "Crucial", "1TB NVMe Gen5", 3600, "1TB / M.2 Gen5", { type: "M.2", capacity: 1, interface: "PCIe 5.0", gaming: 82, creator: 78, ai: 76, office: 84 }),
+        part("nvme-2tb-gen5", "Crucial", "2TB NVMe Gen5", 6200, "2TB / M.2 Gen5", { type: "M.2", capacity: 2, interface: "PCIe 5.0", gaming: 90, creator: 91, ai: 88, office: 86 }),
+        part("nvme-4tb-gen5", "Corsair", "4TB NVMe Gen5", 12800, "4TB / M.2 Gen5", { type: "M.2", capacity: 4, interface: "PCIe 5.0", gaming: 94, creator: 98, ai: 94, office: 86 }),
+        part("hdd-4tb", "Seagate", "4TB HDD", 2800, "4TB / 資料碟", { type: "HDD", capacity: 4, interface: "SATA", gaming: 45, creator: 62, ai: 56, office: 68 }),
+        part("hdd-8tb", "Toshiba", "8TB HDD", 5200, "8TB / 資料碟", { type: "HDD", capacity: 8, interface: "SATA", gaming: 48, creator: 74, ai: 68, office: 66 }),
+        part("hdd-12tb", "Seagate", "12TB HDD", 8800, "12TB / 大量資料", { type: "HDD", capacity: 12, interface: "SATA", gaming: 48, creator: 82, ai: 78, office: 64 })
+      ],
+      psu: [
+        part("psu-450-bronze", "FSP", "450W 80+ Bronze", 1400, "450W / ATX / Bronze", { watts: 450, efficiency: "Bronze", form: "ATX", atx3: false, gaming: 48, creator: 46, ai: 42, office: 78 }),
+        part("psu-550-bronze", "FSP", "550W 80+ Bronze", 1800, "550W / ATX / Bronze", { watts: 550, efficiency: "Bronze", form: "ATX", atx3: false, gaming: 58, creator: 58, ai: 54, office: 82 }),
+        part("psu-650-bronze", "Cooler Master", "650W 80+ Bronze", 2200, "650W / ATX / Bronze", { watts: 650, efficiency: "Bronze", form: "ATX", atx3: false, gaming: 66, creator: 64, ai: 60, office: 84 }),
+        part("psu-650-gold", "Seasonic", "650W 80+ Gold", 2700, "650W / ATX / Gold", { watts: 650, efficiency: "Gold", form: "ATX", atx3: false, gaming: 76, creator: 76, ai: 72, office: 86 }),
+        part("psu-750-gold", "Corsair", "750W 80+ Gold", 3300, "750W / ATX / Gold", { watts: 750, efficiency: "Gold", form: "ATX", atx3: false, gaming: 84, creator: 82, ai: 80, office: 86 }),
+        part("psu-750-atx3", "MSI", "750W Gold ATX 3.0", 3800, "750W / ATX 3.0", { watts: 750, efficiency: "Gold", form: "ATX", atx3: true, gaming: 88, creator: 86, ai: 86, office: 86 }),
+        part("psu-850-gold", "Seasonic", "850W 80+ Gold", 4300, "850W / ATX / Gold", { watts: 850, efficiency: "Gold", form: "ATX", atx3: false, gaming: 88, creator: 88, ai: 86, office: 84 }),
+        part("psu-850-atx3", "Corsair", "850W Gold ATX 3.1", 5000, "850W / ATX 3.1", { watts: 850, efficiency: "Gold", form: "ATX", atx3: true, gaming: 93, creator: 92, ai: 92, office: 84 }),
+        part("psu-1000-atx3", "Seasonic", "1000W Gold ATX 3.1", 6500, "1000W / ATX 3.1", { watts: 1000, efficiency: "Gold", form: "ATX", atx3: true, gaming: 96, creator: 96, ai: 98, office: 80 }),
+        part("psu-1200-platinum", "be quiet!", "1200W Platinum ATX 3.1", 9800, "1200W / Platinum", { watts: 1200, efficiency: "Platinum", form: "ATX", atx3: true, gaming: 98, creator: 100, ai: 100, office: 76 }),
+        part("psu-1600-titanium", "Corsair", "1600W Titanium ATX 3.1", 16800, "1600W / 旗艦", { watts: 1600, efficiency: "Titanium", form: "ATX", atx3: true, gaming: 96, creator: 100, ai: 100, office: 66 }),
+        part("psu-sfx-650", "Corsair", "650W SFX Gold", 3900, "650W / SFX / 小機殼", { watts: 650, efficiency: "Gold", form: "SFX", atx3: false, gaming: 76, creator: 74, ai: 70, office: 88 }),
+        part("psu-sfx-750", "Cooler Master", "750W SFX Gold", 4700, "750W / SFX", { watts: 750, efficiency: "Gold", form: "SFX", atx3: true, gaming: 86, creator: 84, ai: 84, office: 88 }),
+        part("psu-sfx-850", "Corsair", "850W SFX Platinum", 6500, "850W / SFX / Platinum", { watts: 850, efficiency: "Platinum", form: "SFX", atx3: true, gaming: 91, creator: 90, ai: 90, office: 88 })
+      ],
+      case: [
+        part("matx-budget", "Montech", "mATX 入門風流機殼", 1600, "mATX / GPU 320mm", { forms: ["mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 320, maxCooler: 160, radiator: 240, airflow: 72, gaming: 70, creator: 66, ai: 64, office: 84 }),
+        part("matx-air", "ASUS", "mATX 高風流機殼", 2300, "mATX / GPU 345mm", { forms: ["mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 345, maxCooler: 165, radiator: 280, airflow: 82, gaming: 78, creator: 76, ai: 74, office: 86 }),
+        part("matx-glass", "Lian Li", "mATX 玻璃展示機殼", 3300, "mATX / 展示 / GPU 375mm", { forms: ["mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 375, maxCooler: 170, radiator: 360, airflow: 80, gaming: 84, creator: 80, ai: 78, office: 78 }),
+        part("atx-air", "Fractal", "ATX 高風流機殼", 3400, "ATX / GPU 365mm", { forms: ["ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 365, maxCooler: 170, radiator: 360, airflow: 88, gaming: 88, creator: 86, ai: 84, office: 82 }),
+        part("silent-atx", "be quiet!", "ATX 靜音工作站機殼", 4600, "ATX / 靜音 / GPU 355mm", { forms: ["ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 355, maxCooler: 172, radiator: 280, airflow: 78, gaming: 82, creator: 91, ai: 84, office: 90 }),
+        part("showcase-atx", "NZXT", "ATX 展示型玻璃機殼", 5200, "ATX / GPU 400mm", { forms: ["ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 400, maxCooler: 175, radiator: 360, airflow: 82, gaming: 92, creator: 84, ai: 84, office: 76 }),
+        part("airflow-xl", "Corsair", "ATX 大空間風流機殼", 6200, "ATX / GPU 420mm / 420 冷排", { forms: ["ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 420, maxCooler: 180, radiator: 420, airflow: 94, gaming: 94, creator: 92, ai: 92, office: 76 }),
+        part("full-tower", "Fractal", "Full Tower 工作站機殼", 7800, "E-ATX / GPU 460mm", { forms: ["E-ATX", "ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 460, maxCooler: 185, radiator: 420, airflow: 90, gaming: 88, creator: 98, ai: 96, office: 66 }),
+        part("mini-itx", "Cooler Master", "Mini-ITX 小鋼砲機殼", 4300, "Mini-ITX / SFX / GPU 330mm", { forms: ["Mini-ITX"], psuForms: ["SFX"], maxGpu: 330, maxCooler: 72, radiator: 240, airflow: 70, gaming: 76, creator: 68, ai: 66, office: 90 }),
+        part("sff-mesh", "Lian Li", "SFF Mesh Mini-ITX", 5200, "Mini-ITX / SFX / GPU 340mm", { forms: ["Mini-ITX"], psuForms: ["SFX"], maxGpu: 340, maxCooler: 78, radiator: 280, airflow: 78, gaming: 82, creator: 72, ai: 72, office: 92 }),
+        part("itx-console", "Fractal", "Console ITX 機殼", 4200, "Mini-ITX / SFX / GPU 325mm", { forms: ["Mini-ITX"], psuForms: ["SFX"], maxGpu: 325, maxCooler: 70, radiator: 0, airflow: 64, gaming: 72, creator: 60, ai: 58, office: 92 }),
+        part("dual-chamber", "Hyte", "雙艙展示 ATX 機殼", 6900, "ATX / GPU 410mm / 360 冷排", { forms: ["ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 410, maxCooler: 180, radiator: 360, airflow: 84, gaming: 94, creator: 88, ai: 88, office: 72 }),
+        part("e-atx-air", "Phanteks", "E-ATX 高風流工作站", 8200, "E-ATX / GPU 455mm", { forms: ["E-ATX", "ATX", "mATX", "Mini-ITX"], psuForms: ["ATX"], maxGpu: 455, maxCooler: 188, radiator: 420, airflow: 96, gaming: 92, creator: 100, ai: 98, office: 66 })
+      ],
+      cooler: [
+        part("stock-amd", "AMD", "盒裝原廠散熱器", 0, "AM4/AM5 / 95W / 低塔", { sockets: ["AM4", "AM5"], capacity: 95, height: 65, radiator: 0, gaming: 54, creator: 48, ai: 44, office: 84 }),
+        part("intel-rm1", "Intel", "Intel 原廠散熱器", 0, "LGA1700/LGA1851 / 95W", { sockets: ["LGA1700", "LGA1851"], capacity: 95, height: 65, radiator: 0, gaming: 52, creator: 48, ai: 44, office: 84 }),
+        part("low-profile-67", "Noctua", "低塔風冷 67mm", 1700, "67mm / ITX / 120W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 120, height: 67, radiator: 0, gaming: 62, creator: 58, ai: 56, office: 88 }),
+        part("single-150", "DeepCool", "單塔風冷 150mm", 1200, "150mm / 160W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 160, height: 150, radiator: 0, gaming: 72, creator: 70, ai: 68, office: 86 }),
+        part("tower-155", "Thermalright", "單塔風冷 155mm", 1500, "155mm / 180W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 180, height: 155, radiator: 0, gaming: 78, creator: 78, ai: 76, office: 86 }),
+        part("dual-158", "Thermalright", "雙塔風冷 158mm", 2200, "158mm / 235W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 235, height: 158, radiator: 0, gaming: 86, creator: 88, ai: 86, office: 84 }),
+        part("dual-165", "Noctua", "高階雙塔風冷 165mm", 3300, "165mm / 260W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 260, height: 165, radiator: 0, gaming: 90, creator: 92, ai: 90, office: 82 }),
+        part("aio-240", "Arctic", "240mm 一體式水冷", 3400, "240mm / 250W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 250, height: 0, radiator: 240, gaming: 88, creator: 90, ai: 90, office: 78 }),
+        part("aio-280", "NZXT", "280mm 一體式水冷", 4600, "280mm / 280W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 280, height: 0, radiator: 280, gaming: 90, creator: 93, ai: 92, office: 76 }),
+        part("aio-360", "Corsair", "360mm 一體式水冷", 5600, "360mm / 320W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 320, height: 0, radiator: 360, gaming: 94, creator: 96, ai: 96, office: 72 }),
+        part("aio-420", "Arctic", "420mm 一體式水冷", 7200, "420mm / 360W", { sockets: ["AM4", "AM5", "LGA1700", "LGA1851"], capacity: 360, height: 0, radiator: 420, gaming: 96, creator: 98, ai: 98, office: 68 }),
+        part("tr-air", "Noctua", "Threadripper 雙塔風冷", 4600, "sTR5 / 280W", { sockets: ["sTR5"], capacity: 280, height: 165, radiator: 0, gaming: 72, creator: 82, ai: 80, office: 58 }),
+        part("tr-aio-360", "Enermax", "Threadripper 360mm 水冷", 8900, "sTR5 / 420W", { sockets: ["sTR5"], capacity: 420, height: 0, radiator: 360, gaming: 78, creator: 98, ai: 98, office: 54 })
+      ]
+    };
+
+    const presets = {
+      office: {
+        label: "文書學習",
+        useCase: "office",
+        budget: 26000,
+        reserve: 5,
+        selected: {
+          cpu: "r5-7600",
+          motherboard: "b650m-wifi",
+          gpu: "no-gpu",
+          memory: "ddr5-16-5600",
+          storage: "nvme-1tb-gen4",
+          psu: "psu-550-bronze",
+          case: "matx-budget",
+          cooler: "stock-amd"
+        }
+      },
+      value1440: {
+        label: "2K 高值感",
+        useCase: "gaming",
+        budget: 60000,
+        reserve: 5,
+        selected: {
+          cpu: "r7-7800x3d",
+          motherboard: "b650-atx",
+          gpu: "rtx-4070-super",
+          memory: "ddr5-32-6000",
+          storage: "nvme-2tb-gen4",
+          psu: "psu-850-atx3",
+          case: "atx-air",
+          cooler: "dual-158"
+        }
+      },
+      creator: {
+        label: "剪輯創作",
+        useCase: "creator",
+        budget: 100000,
+        reserve: 6,
+        selected: {
+          cpu: "r9-9950x",
+          motherboard: "x870-atx",
+          gpu: "rtx-4070-ti-super",
+          memory: "ddr5-64-6000",
+          storage: "nvme-4tb-gen4",
+          psu: "psu-1000-atx3",
+          case: "airflow-xl",
+          cooler: "aio-360"
+        }
+      },
+      ai: {
+        label: "AI 顯存",
+        useCase: "ai",
+        budget: 220000,
+        reserve: 7,
+        selected: {
+          cpu: "r9-9950x3d",
+          motherboard: "x870e-creator",
+          gpu: "rtx-5090",
+          memory: "ddr5-96-6000",
+          storage: "nvme-4tb-gen5",
+          psu: "psu-1600-titanium",
+          case: "airflow-xl",
+          cooler: "aio-420"
+        }
+      },
+      workstation: {
+        label: "工作站",
+        useCase: "creator",
+        budget: 220000,
+        reserve: 8,
+        selected: {
+          cpu: "tr-7960x",
+          motherboard: "trx50-workstation",
+          gpu: "rtx-5080",
+          memory: "ddr5-128-5600",
+          storage: "nvme-8tb-gen4",
+          psu: "psu-1200-platinum",
+          case: "full-tower",
+          cooler: "tr-aio-360"
+        }
+      }
+    };
+
+    const defaultState = {
+      useCase: "gaming",
+      budget: 60000,
+      reserve: 5,
+      includeWindows: false,
+      theme: "light",
+      activeCategory: "cpu",
+      search: "",
+      sort: "fit",
+      filter: "all",
+      onlyCompatible: false,
+      selected: { ...presets.value1440.selected },
+      overrides: {},
+      custom: emptyCustomCatalog()
+    };
+
+    const state = clone(defaultState);
+
+    const els = {
+      navTotal: byId("navTotal"),
+      navScore: byId("navScore"),
+      navCompat: byId("navCompat"),
+      navCount: byId("navCount"),
+      themeToggle: byId("themeToggle"),
+      fixBuild: byId("fixBuild"),
+      optimizeBuild: byId("optimizeBuild"),
+      useCase: byId("useCase"),
+      budgetRange: byId("budgetRange"),
+      budgetValue: byId("budgetValue"),
+      includeWindows: byId("includeWindows"),
+      reserveRange: byId("reserveRange"),
+      reserveValue: byId("reserveValue"),
+      heroTotal: byId("heroTotal"),
+      heroCompat: byId("heroCompat"),
+      heroLoad: byId("heroLoad"),
+      heroPsu: byId("heroPsu"),
+      scoreRing: byId("scoreRing"),
+      scoreValue: byId("scoreValue"),
+      scoreTitle: byId("scoreTitle"),
+      scoreCopy: byId("scoreCopy"),
+      summaryLine: byId("summaryLine"),
+      partsSubtotal: byId("partsSubtotal"),
+      grandTotal: byId("grandTotal"),
+      budgetDelta: byId("budgetDelta"),
+      psuHeadroom: byId("psuHeadroom"),
+      costBar: byId("costBar"),
+      barLegend: byId("barLegend"),
+      presetButtons: byId("presetButtons"),
+      selectedCount: byId("selectedCount"),
+      categoryList: byId("categoryList"),
+      activeCategoryTitle: byId("activeCategoryTitle"),
+      activeCategorySubtitle: byId("activeCategorySubtitle"),
+      categoryFitBadge: byId("categoryFitBadge"),
+      partSearch: byId("partSearch"),
+      sortMode: byId("sortMode"),
+      onlyCompatible: byId("onlyCompatible"),
+      filterChips: byId("filterChips"),
+      catalogCount: byId("catalogCount"),
+      catalogHint: byId("catalogHint"),
+      partGrid: byId("partGrid"),
+      customForm: byId("customForm"),
+      customFields: byId("customFields"),
+      clearCustomParts: byId("clearCustomParts"),
+      selectedSubtitle: byId("selectedSubtitle"),
+      selectedPanel: byId("selectedPanel"),
+      compatCount: byId("compatCount"),
+      compatList: byId("compatList"),
+      insightCount: byId("insightCount"),
+      insightList: byId("insightList"),
+      priceTable: byId("priceTable"),
+      databaseStatus: byId("databaseStatus"),
+      copyBuild: byId("copyBuild"),
+      downloadBuild: byId("downloadBuild"),
+      saveBuild: byId("saveBuild"),
+      printBuild: byId("printBuild"),
+      toast: byId("toast")
+    };
+
+    function part(id, brand, name, price, detail, specs) {
+      return {
+        id,
+        brand,
+        name,
+        price,
+        detail,
+        custom: false,
+        ...specs
+      };
+    }
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function emptyCustomCatalog() {
+      return Object.fromEntries(categories.map((category) => [category.key, []]));
+    }
+
+    function allParts(categoryKey) {
+      return [...catalog[categoryKey], ...(state.custom[categoryKey] || [])];
+    }
+
+    function getPart(categoryKey, id = state.selected[categoryKey]) {
+      return allParts(categoryKey).find((item) => item.id === id) || catalog[categoryKey][0];
+    }
+
+    function getBuild(selection = state.selected) {
+      return Object.fromEntries(categories.map((category) => [category.key, getPart(category.key, selection[category.key])]));
+    }
+
+    function priceOf(categoryKey, partItem = getPart(categoryKey)) {
+      const override = state.overrides[partItem.id];
+      return Number.isFinite(override) ? override : partItem.price;
+    }
+
+    function formatMoney(value) {
+      return currency.format(Math.round(value || 0));
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function scoreFor(partItem, use = state.useCase) {
+      return clamp(Number(partItem[use] || partItem.gaming || 60), 0, 100);
+    }
+
+    function estimateLoad(build) {
+      return Math.round((build.cpu.boost || build.cpu.tdp || 0) + (build.gpu.watt || 0) + 82);
+    }
+
+    function recommendedPsuWatts(load) {
+      return Math.ceil((load * 1.45) / 50) * 50;
+    }
+
+    function totalPrice(selection = state.selected, options = {}) {
+      const includeWindows = options.includeWindows ?? state.includeWindows;
+      const reserve = options.reserve ?? state.reserve;
+      const rows = categories.map((category) => {
+        const partItem = getPart(category.key, selection[category.key]);
+        return { category, part: partItem, price: priceOf(category.key, partItem) };
+      });
+      const subtotal = rows.reduce((sum, row) => sum + row.price, 0);
+      const os = includeWindows ? 4290 : 0;
+      const reserveAmount = Math.round(((subtotal + os) * reserve / 100) / 100) * 100;
+      const grandTotal = subtotal + os + reserveAmount;
+      return { rows, subtotal, os, reserveAmount, grandTotal };
+    }
+
+    function evaluate(selection = state.selected, options = {}) {
+      const build = getBuild(selection);
+      const issues = [];
+      const add = (level, title, text, categoriesInvolved) => issues.push({ level, title, text, categories: categoriesInvolved });
+      const load = estimateLoad(build);
+      const recommended = recommendedPsuWatts(load);
+      const priceData = totalPrice(selection);
+
+      if (build.cpu.socket !== build.motherboard.socket) {
+        add("danger", "處理器和主機板插槽不合", `${build.cpu.name} 是 ${build.cpu.socket}，主機板是 ${build.motherboard.socket}。`, ["cpu", "motherboard"]);
+      }
+
+      if (!build.cpu.memory.includes(build.motherboard.memory)) {
+        add("danger", "處理器記憶體平台不合", `${build.cpu.name} 支援 ${build.cpu.memory.join(" / ")}，主機板是 ${build.motherboard.memory}。`, ["cpu", "motherboard", "memory"]);
+      }
+
+      if (build.memory.type !== build.motherboard.memory) {
+        add("danger", "記憶體世代不合", `${build.memory.name} 是 ${build.memory.type}，主機板需要 ${build.motherboard.memory}。`, ["memory", "motherboard"]);
+      }
+
+      if (build.memory.capacity > build.motherboard.maxRam) {
+        add("danger", "記憶體容量超過主機板上限", `${build.memory.capacity}GB 超過主機板標示的 ${build.motherboard.maxRam}GB。`, ["memory", "motherboard"]);
+      }
+
+      if (build.cpu.vrmNeed > build.motherboard.vrm + 18) {
+        add("danger", "主機板供電不適合這顆 CPU", `${build.cpu.name} 高負載需求高，建議換更高階晶片組或供電更強的主機板。`, ["cpu", "motherboard"]);
+      } else if (build.cpu.vrmNeed > build.motherboard.vrm + 5) {
+        add("warn", "主機板供電餘裕偏小", "可以使用，但長時間高負載可能限制效能或溫度較高。", ["cpu", "motherboard"]);
+      }
+
+      if (!build.case.forms.includes(build.motherboard.form)) {
+        add("danger", "主機板放不進機殼", `${build.case.name} 支援 ${build.case.forms.join(" / ")}，目前主機板是 ${build.motherboard.form}。`, ["case", "motherboard"]);
+      }
+
+      if (!build.case.psuForms.includes(build.psu.form)) {
+        add("danger", "電源尺寸和機殼不合", `${build.case.name} 支援 ${build.case.psuForms.join(" / ")}，目前電源是 ${build.psu.form}。`, ["case", "psu"]);
+      }
+
+      if (build.gpu.length > build.case.maxGpu) {
+        add("danger", "顯示卡長度超過機殼限制", `${build.gpu.name} 約 ${build.gpu.length}mm，機殼上限 ${build.case.maxGpu}mm。`, ["gpu", "case"]);
+      }
+
+      if (!build.cooler.sockets.includes(build.cpu.socket)) {
+        add("danger", "散熱器扣具不支援 CPU 平台", `${build.cooler.name} 沒有列出 ${build.cpu.socket} 支援。`, ["cooler", "cpu"]);
+      }
+
+      if (build.cooler.radiator > 0 && build.cooler.radiator > build.case.radiator) {
+        add("danger", "水冷排尺寸不合", `${build.cooler.radiator}mm 水冷排超過機殼 ${build.case.radiator}mm 支援。`, ["cooler", "case"]);
+      }
+
+      if (build.cooler.radiator === 0 && build.cooler.height > build.case.maxCooler) {
+        add("danger", "風冷高度超過機殼限制", `${build.cooler.name} 高度 ${build.cooler.height}mm，機殼上限 ${build.case.maxCooler}mm。`, ["cooler", "case"]);
+      }
+
+      if (build.cooler.capacity < build.cpu.boost) {
+        add("danger", "散熱能力不足", `${build.cpu.name} 高負載約 ${build.cpu.boost}W，散熱器建議壓制能力 ${build.cooler.capacity}W。`, ["cooler", "cpu"]);
+      } else if (build.cooler.capacity < build.cpu.boost * 1.18) {
+        add("warn", "散熱餘裕偏小", "長時間剪輯、渲染或夏天使用時，建議提高散熱器等級。", ["cooler", "cpu"]);
+      }
+
+      if (build.psu.watts < recommended) {
+        add("danger", "電源瓦數不足", `估算負載 ${load}W，建議至少 ${recommended}W，目前是 ${build.psu.watts}W。`, ["psu", "gpu", "cpu"]);
+      } else if (build.psu.watts < recommended + 100) {
+        add("warn", "電源升級空間偏緊", "未來升級顯示卡時，可能需要一起更換電源。", ["psu", "gpu", "cpu"]);
+      }
+
+      if (["12VHPWR", "12V-2x6"].includes(build.gpu.powerPlug) && !build.psu.atx3) {
+        add("warn", "建議使用 ATX 3.x 電源", `${build.gpu.name} 使用 ${build.gpu.powerPlug}，搭配 ATX 3.x 電源線材會更乾淨。`, ["gpu", "psu"]);
+      }
+
+      if (build.gpu.id === "no-gpu" && !build.cpu.igpu) {
+        add("danger", "目前沒有畫面輸出來源", `${build.cpu.name} 沒有內顯，若不裝獨立顯卡會無法正常輸出畫面。`, ["cpu", "gpu"]);
+      }
+
+      if (build.storage.type === "M.2" && build.motherboard.m2 < 1) {
+        add("danger", "主機板沒有 M.2 插槽", "請改選 SATA SSD 或換有 M.2 插槽的主機板。", ["storage", "motherboard"]);
+      }
+
+      if (state.useCase === "gaming" && build.gpu.id === "no-gpu") {
+        add("warn", "遊戲用途建議加裝獨立顯卡", "目前配置適合文書和輕量使用，不適合 3D 遊戲。", ["gpu"]);
+      }
+
+      if (state.useCase === "gaming" && build.gpu.vram > 0 && build.gpu.vram < 12) {
+        add("warn", "2K 遊戲顯存可能偏小", "若目標是 1440p 高畫質，12GB 以上會比較安心。", ["gpu"]);
+      }
+
+      if (state.useCase === "ai" && build.gpu.vram > 0 && build.gpu.vram < 16) {
+        add("warn", "AI 用途顯存偏小", "若要跑較大的模型或批次任務，建議 16GB 以上顯存。", ["gpu"]);
+      }
+
+      if (state.useCase === "creator" && build.memory.capacity < 32) {
+        add("warn", "創作用途記憶體偏小", "剪輯、修圖和多工建議 32GB 以上。", ["memory"]);
+      }
+
+      if (state.useCase === "ai" && build.memory.capacity < 64) {
+        add("warn", "AI 用途記憶體建議更大", "資料處理、模型載入和多工通常 64GB 起跳更舒服。", ["memory"]);
+      }
+
+      if (state.useCase === "creator" && build.storage.capacity < 2) {
+        add("warn", "創作用途儲存容量偏小", "素材、快取和專案檔建議至少 2TB SSD。", ["storage"]);
+      }
+
+      if (options.includeBudget !== false && priceData.grandTotal > state.budget) {
+        add("warn", "超出目前預算", `總價 ${formatMoney(priceData.grandTotal)}，比預算多 ${formatMoney(priceData.grandTotal - state.budget)}。`, ["budget"]);
+      }
+
+      if (issues.length === 0) {
+        add("good", "配置相容", "插槽、記憶體、機殼空間、散熱和電源餘裕都通過檢查。", ["all"]);
+      }
+
+      return { build, issues, load, recommended, priceData };
+    }
+
+    function scoreBuild(report = evaluate()) {
+      const weights = {
+        gaming: { cpu: 0.24, gpu: 0.49, memory: 0.09, storage: 0.06, motherboard: 0.04, psu: 0.03, case: 0.03, cooler: 0.02 },
+        creator: { cpu: 0.31, gpu: 0.22, memory: 0.16, storage: 0.12, motherboard: 0.07, psu: 0.04, case: 0.03, cooler: 0.05 },
+        ai: { cpu: 0.18, gpu: 0.43, memory: 0.17, storage: 0.08, motherboard: 0.05, psu: 0.04, case: 0.02, cooler: 0.03 },
+        office: { cpu: 0.24, gpu: 0.06, memory: 0.18, storage: 0.18, motherboard: 0.1, psu: 0.08, case: 0.08, cooler: 0.08 }
+      }[state.useCase];
+
+      let base = 0;
+      categories.forEach((category) => {
+        base += scoreFor(report.build[category.key]) * weights[category.key];
+      });
+
+      const dangerPenalty = report.issues.filter((issue) => issue.level === "danger").length * 18;
+      const warnPenalty = report.issues.filter((issue) => issue.level === "warn").length * 5;
+      const budgetPenalty = report.priceData.grandTotal > state.budget
+        ? clamp(((report.priceData.grandTotal - state.budget) / state.budget) * 20, 0, 20)
+        : 0;
+      const budgetUseBonus = report.priceData.grandTotal <= state.budget
+        ? clamp((report.priceData.grandTotal / state.budget) * 5, 0, 5)
+        : 0;
+
+      return Math.round(clamp(base - dangerPenalty - warnPenalty - budgetPenalty + budgetUseBonus, 0, 100));
+    }
+
+    function partStatus(categoryKey, candidate) {
+      const selection = { ...state.selected, [categoryKey]: candidate.id };
+      const report = evaluate(selection, { includeBudget: false });
+      const relevant = report.issues.filter((issue) => issue.categories.includes(categoryKey));
+      const danger = relevant.find((issue) => issue.level === "danger");
+      if (danger) return { level: "danger", label: "不相容", text: danger.title };
+      const warn = relevant.find((issue) => issue.level === "warn");
+      if (warn) return { level: "warn", label: "可用但注意", text: warn.title };
+      return { level: "good", label: "可用", text: "通過目前搭配檢查" };
+    }
+
+    function specFor(categoryKey, partItem) {
+      switch (categoryKey) {
+        case "cpu":
+          return `${partItem.cores}C/${partItem.threads}T · ${partItem.socket} · ${partItem.memory.join("/")} · ${partItem.boost}W`;
+        case "motherboard":
+          return `${partItem.socket} · ${partItem.memory} · ${partItem.form} · ${partItem.m2}x M.2`;
+        case "gpu":
+          return partItem.id === "no-gpu" ? "使用處理器內顯" : `${partItem.vram}GB · ${partItem.watt}W · ${partItem.length}mm`;
+        case "memory":
+          return `${partItem.capacity}GB · ${partItem.type}-${partItem.speed} · ${partItem.sticks}`;
+        case "storage":
+          return `${partItem.capacity}TB · ${partItem.type} · ${partItem.interface}`;
+        case "psu":
+          return `${partItem.watts}W · ${partItem.efficiency} · ${partItem.form}${partItem.atx3 ? " · ATX 3.x" : ""}`;
+        case "case":
+          return `${partItem.forms.join("/")} · GPU ${partItem.maxGpu}mm · 冷排 ${partItem.radiator}mm`;
+        case "cooler":
+          return partItem.radiator > 0
+            ? `${partItem.radiator}mm · ${partItem.capacity}W · ${partItem.sockets.join("/")}`
+            : `${partItem.height}mm · ${partItem.capacity}W · ${partItem.sockets.join("/")}`;
+        default:
+          return partItem.detail;
+      }
+    }
+
+    function chipsFor(categoryKey, partItem) {
+      switch (categoryKey) {
+        case "cpu":
+          return [partItem.socket, partItem.memory.join("/"), `${partItem.cores}C`, `${partItem.boost}W`, partItem.igpu ? "有內顯" : "無內顯"];
+        case "motherboard":
+          return [partItem.socket, partItem.memory, partItem.form, partItem.chipset, `${partItem.m2}x M.2`];
+        case "gpu":
+          return partItem.id === "no-gpu" ? ["0W", "不佔空間", "內顯"] : [partItem.series, `${partItem.vram}GB`, `${partItem.watt}W`, `${partItem.length}mm`];
+        case "memory":
+          return [partItem.type, `${partItem.capacity}GB`, partItem.sticks, `${partItem.speed}`];
+        case "storage":
+          return [partItem.type, `${partItem.capacity}TB`, partItem.interface];
+        case "psu":
+          return [`${partItem.watts}W`, partItem.efficiency, partItem.form, partItem.atx3 ? "ATX 3.x" : "傳統線材"];
+        case "case":
+          return [partItem.forms.join("/"), partItem.psuForms.join("/"), `GPU ${partItem.maxGpu}mm`, `冷排 ${partItem.radiator}mm`];
+        case "cooler":
+          return [partItem.radiator > 0 ? `${partItem.radiator}mm` : `${partItem.height}mm`, `${partItem.capacity}W`, partItem.sockets.join("/")];
+        default:
+          return [];
+      }
+    }
+
+    function renderPresets() {
+      els.presetButtons.innerHTML = Object.entries(presets).map(([key, preset]) => (
+        `<button class="btn btn-small" type="button" data-preset="${key}">${escapeHtml(preset.label)}</button>`
+      )).join("");
+    }
+
+    function renderCategoryList(report = evaluate()) {
+      const dangerKeys = new Set(report.issues.filter((issue) => issue.level === "danger").flatMap((issue) => issue.categories));
+      const warnKeys = new Set(report.issues.filter((issue) => issue.level === "warn").flatMap((issue) => issue.categories));
+      els.selectedCount.textContent = `${categories.filter((category) => state.selected[category.key]).length} / ${categories.length} 已選`;
+      els.categoryList.innerHTML = categories.map((category) => {
+        const partItem = getPart(category.key);
+        const level = dangerKeys.has(category.key) ? "danger" : warnKeys.has(category.key) ? "warn" : "good";
+        const active = state.activeCategory === category.key ? " is-active" : "";
+        return `
+          <button class="category-btn${active}" type="button" data-category-tab="${category.key}">
+            <span class="category-code">${category.code}</span>
+            <span class="category-main">
+              <strong>${category.label}</strong>
+              <span>${escapeHtml(partItem.name)}</span>
+            </span>
+            <span class="status-badge ${level}">${level === "danger" ? "修正" : level === "warn" ? "提醒" : "OK"}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderFilters() {
+      const categoryKey = state.activeCategory;
+      const parts = allParts(categoryKey);
+      const facets = new Set(["all"]);
+      parts.forEach((partItem) => {
+        getFacetValues(categoryKey, partItem).forEach((value) => facets.add(value));
+      });
+      if (![...facets].includes(state.filter)) state.filter = "all";
+      els.filterChips.innerHTML = [...facets].map((facet) => {
+        const active = state.filter === facet ? " is-active" : "";
+        const label = facet === "all" ? "全部" : facet;
+        return `<button class="chip${active}" type="button" data-filter="${escapeHtml(facet)}">${escapeHtml(label)}</button>`;
+      }).join("");
+    }
+
+    function getFacetValues(categoryKey, partItem) {
+      switch (categoryKey) {
+        case "cpu":
+          return [partItem.brand, partItem.socket, ...partItem.memory, partItem.igpu ? "有內顯" : "無內顯"].filter(Boolean);
+        case "motherboard":
+          return [partItem.brand, partItem.socket, partItem.memory, partItem.form, partItem.chipset].filter(Boolean);
+        case "gpu":
+          return [partItem.brand, partItem.series, partItem.vram >= 16 ? "16GB+" : `${partItem.vram}GB`, partItem.watt <= 180 ? "低功耗" : "高效能"].filter(Boolean);
+        case "memory":
+          return [partItem.brand, partItem.type, `${partItem.capacity}GB`, partItem.capacity >= 64 ? "64GB+" : "主流容量"].filter(Boolean);
+        case "storage":
+          return [partItem.brand, partItem.type, partItem.interface, partItem.capacity >= 4 ? "4TB+" : "主流容量"].filter(Boolean);
+        case "psu":
+          return [partItem.brand, partItem.form, partItem.efficiency, partItem.atx3 ? "ATX 3.x" : "傳統線材", `${Math.floor(partItem.watts / 100) * 100}W+`].filter(Boolean);
+        case "case":
+          return [partItem.brand, ...partItem.forms, ...partItem.psuForms, partItem.radiator >= 360 ? "360冷排+" : "主流散熱"].filter(Boolean);
+        case "cooler":
+          return [partItem.brand, partItem.radiator > 0 ? "水冷" : "風冷", ...partItem.sockets, partItem.capacity >= 250 ? "高壓制" : "主流壓制"].filter(Boolean);
+        default:
+          return [];
+      }
+    }
+
+    function renderPartList() {
+      const category = categories.find((item) => item.key === state.activeCategory);
+      const categoryKey = category.key;
+      const query = state.search.trim().toLocaleLowerCase("zh-Hant");
+      let rows = allParts(categoryKey).map((partItem) => ({ part: partItem, status: partStatus(categoryKey, partItem) }));
+
+      if (query) {
+        rows = rows.filter(({ part }) => searchText(categoryKey, part).includes(query));
+      }
+
+      if (state.filter !== "all") {
+        rows = rows.filter(({ part }) => getFacetValues(categoryKey, part).includes(state.filter));
+      }
+
+      if (state.onlyCompatible) {
+        rows = rows.filter(({ status }) => status.level !== "danger");
+      }
+
+      rows.sort((a, b) => compareParts(categoryKey, a, b));
+
+      const compatibleTotal = allParts(categoryKey).filter((partItem) => partStatus(categoryKey, partItem).level !== "danger").length;
+      els.activeCategoryTitle.textContent = `${category.label}市場零件庫`;
+      els.activeCategorySubtitle.textContent = category.note;
+      els.categoryFitBadge.className = "status-badge good";
+      els.categoryFitBadge.textContent = "即時相容";
+      els.catalogCount.textContent = `${rows.length} 件顯示 / ${allParts(categoryKey).length} 件總數 / ${compatibleTotal} 件相容`;
+      els.catalogHint.textContent = state.onlyCompatible ? "已隱藏不相容項目" : "不相容項目會標示原因";
+
+      if (rows.length === 0) {
+        els.partGrid.innerHTML = `<div class="empty-state">找不到符合條件的零件，請放寬搜尋或關閉只看相容。</div>`;
+        return;
+      }
+
+      els.partGrid.innerHTML = rows.map(({ part: partItem, status }) => renderPartCard(categoryKey, partItem, status)).join("");
+    }
+
+    function renderPartCard(categoryKey, partItem, status) {
+      const selected = state.selected[categoryKey] === partItem.id;
+      const fit = scoreFor(partItem);
+      const classes = [
+        "part-card",
+        selected ? "is-selected" : "",
+        status.level === "danger" ? "is-incompatible" : ""
+      ].filter(Boolean).join(" ");
+      return `
+        <button class="${classes}" type="button" data-select-part="${escapeHtml(partItem.id)}" aria-pressed="${selected}">
+          <span class="part-card-top">
+            <span class="brand-badge">${escapeHtml(partItem.brand)}</span>
+            <span class="part-badge ${status.level}">${status.label}</span>
+          </span>
+          <span class="part-title">
+            <strong>${escapeHtml(partItem.name)}</strong>
+          </span>
+          <span class="part-detail">${escapeHtml(status.text)}</span>
+          <span class="spec-row">
+            ${chipsFor(categoryKey, partItem).slice(0, 5).map((chip) => `<span class="spec-chip">${escapeHtml(chip)}</span>`).join("")}
+          </span>
+          <span class="part-bottom">
+            <span class="price-line">
+              <strong>${formatMoney(priceOf(categoryKey, partItem))}</strong>
+              <span class="tiny-badge good">適合 ${fit}</span>
+            </span>
+            <span class="fit-meter" aria-hidden="true"><span style="--fit:${fit}%"></span></span>
+          </span>
+        </button>
+      `;
+    }
+
+    function searchText(categoryKey, partItem) {
+      return [
+        partItem.brand,
+        partItem.name,
+        partItem.detail,
+        specFor(categoryKey, partItem),
+        ...chipsFor(categoryKey, partItem),
+        ...getFacetValues(categoryKey, partItem)
+      ].join(" ").toLocaleLowerCase("zh-Hant");
+    }
+
+    function compareParts(categoryKey, a, b) {
+      const priceA = priceOf(categoryKey, a.part);
+      const priceB = priceOf(categoryKey, b.part);
+      if (state.sort === "priceAsc") return priceA - priceB;
+      if (state.sort === "priceDesc") return priceB - priceA;
+      if (state.sort === "name") return a.part.name.localeCompare(b.part.name);
+      if (state.sort === "power") return powerValue(categoryKey, a.part) - powerValue(categoryKey, b.part);
+      const fitA = scoreFor(a.part) + (a.status.level === "good" ? 12 : a.status.level === "warn" ? 4 : -30) - Math.min(16, priceA / 18000);
+      const fitB = scoreFor(b.part) + (b.status.level === "good" ? 12 : b.status.level === "warn" ? 4 : -30) - Math.min(16, priceB / 18000);
+      return fitB - fitA;
+    }
+
+    function powerValue(categoryKey, partItem) {
+      if (categoryKey === "cpu") return partItem.boost || partItem.tdp || 0;
+      if (categoryKey === "gpu") return partItem.watt || 0;
+      if (categoryKey === "psu") return partItem.watts || 0;
+      if (categoryKey === "cooler") return partItem.capacity || 0;
+      return priceOf(categoryKey, partItem);
+    }
+
+    function renderSelectedPanel() {
+      const category = categories.find((item) => item.key === state.activeCategory);
+      const partItem = getPart(category.key);
+      const status = partStatus(category.key, partItem);
+      els.selectedSubtitle.textContent = category.label;
+      els.selectedPanel.innerHTML = `
+        <div class="selected-card">
+          <div class="selected-head">
+            <div class="part-title">
+              <span class="brand-badge">${escapeHtml(partItem.brand)}</span>
+              <strong class="selected-name">${escapeHtml(partItem.name)}</strong>
+            </div>
+            <span class="status-badge ${status.level}">${status.label}</span>
+          </div>
+          <p class="muted">${escapeHtml(partItem.detail)}</p>
+          <div class="selected-specs">
+            ${chipsFor(category.key, partItem).map((chip) => `<span class="spec-chip">${escapeHtml(chip)}</span>`).join("")}
+          </div>
+          <div class="price-edit">
+            <label class="field" for="activePrice">
+              <span class="mini-label">估算價</span>
+              <input id="activePrice" type="number" min="0" step="100" inputmode="numeric" value="${priceOf(category.key, partItem)}">
+            </label>
+            <button class="btn btn-small" type="button" id="restorePrice">原價</button>
+          </div>
+          <div>
+            <div class="price-line">
+              <span class="muted">用途適合度</span>
+              <strong>${scoreFor(partItem)} / 100</strong>
+            </div>
+            <div class="fit-meter" aria-hidden="true"><span style="--fit:${scoreFor(partItem)}%"></span></div>
+          </div>
+          <p class="muted">${escapeHtml(status.text)}</p>
+        </div>
+      `;
+
+      const priceInput = byId("activePrice");
+      priceInput.addEventListener("input", () => {
+        const value = Number(priceInput.value);
+        if (Number.isFinite(value) && value >= 0) {
+          state.overrides[partItem.id] = value;
+        } else {
+          delete state.overrides[partItem.id];
+        }
+        updateLiveOnly();
+      });
+
+      byId("restorePrice").addEventListener("click", () => {
+        delete state.overrides[partItem.id];
+        renderSelectedPanel();
+        refresh({ list: true });
+        showToast("已恢復這項零件的估算價");
+      });
+    }
+
+    function renderCustomFields() {
+      const categoryKey = state.activeCategory;
+      const common = [
+        fieldText("brand", "品牌", "自訂"),
+        fieldText("name", "型號", ""),
+        fieldNumber("price", "價格", 0, 100),
+        fieldNumber("score", "適合度", 72, 1)
+      ];
+      const fields = {
+        cpu: [
+          fieldSelect("socket", "插槽", ["AM4", "AM5", "LGA1700", "LGA1851", "sTR5"]),
+          fieldSelect("memory", "記憶體", ["DDR5", "DDR4", "DDR4/DDR5"]),
+          fieldNumber("cores", "核心", 8, 1),
+          fieldNumber("threads", "執行緒", 16, 1),
+          fieldNumber("boost", "高負載 W", 120, 5),
+          fieldCheckbox("igpu", "有內顯")
+        ],
+        motherboard: [
+          fieldSelect("socket", "插槽", ["AM5", "AM4", "LGA1700", "LGA1851", "sTR5"]),
+          fieldSelect("memory", "記憶體", ["DDR5", "DDR4"]),
+          fieldSelect("form", "尺寸", ["ATX", "mATX", "Mini-ITX", "E-ATX"]),
+          fieldText("chipset", "晶片組", "B650"),
+          fieldNumber("m2", "M.2 數", 2, 1),
+          fieldNumber("vrm", "供電等級", 80, 1)
+        ],
+        gpu: [
+          fieldText("series", "系列", "RTX / RX"),
+          fieldNumber("vram", "顯存 GB", 12, 1),
+          fieldNumber("watt", "功耗 W", 220, 5),
+          fieldNumber("length", "長度 mm", 300, 5),
+          fieldSelect("powerPlug", "電源線", ["8-pin", "2x8-pin", "12VHPWR", "12V-2x6", "None"])
+        ],
+        memory: [
+          fieldSelect("type", "世代", ["DDR5", "DDR4"]),
+          fieldNumber("capacity", "容量 GB", 32, 1),
+          fieldText("sticks", "組合", "2x16GB"),
+          fieldNumber("speed", "速度", 6000, 100)
+        ],
+        storage: [
+          fieldSelect("type", "類型", ["M.2", "SATA", "HDD"]),
+          fieldNumber("capacity", "容量 TB", 2, 0.5),
+          fieldSelect("interface", "介面", ["PCIe 4.0", "PCIe 5.0", "PCIe 3.0", "SATA"])
+        ],
+        psu: [
+          fieldNumber("watts", "瓦數", 750, 50),
+          fieldSelect("efficiency", "認證", ["Bronze", "Gold", "Platinum", "Titanium"]),
+          fieldSelect("form", "尺寸", ["ATX", "SFX"]),
+          fieldCheckbox("atx3", "ATX 3.x")
+        ],
+        case: [
+          fieldSelect("forms", "主機板支援", ["ATX/mATX/Mini-ITX", "mATX/Mini-ITX", "Mini-ITX", "E-ATX/ATX/mATX/Mini-ITX"]),
+          fieldSelect("psuForms", "電源支援", ["ATX", "SFX", "ATX/SFX"]),
+          fieldNumber("maxGpu", "顯卡 mm", 360, 5),
+          fieldNumber("maxCooler", "風冷 mm", 170, 5),
+          fieldNumber("radiator", "冷排 mm", 360, 120)
+        ],
+        cooler: [
+          fieldSelect("sockets", "扣具", ["AM4/AM5/LGA1700/LGA1851", "AM4/AM5", "LGA1700/LGA1851", "sTR5"]),
+          fieldNumber("capacity", "壓制 W", 220, 10),
+          fieldNumber("height", "高度 mm", 155, 5),
+          fieldNumber("radiator", "冷排 mm", 0, 120)
+        ]
+      }[categoryKey];
+      els.customFields.innerHTML = [...common, ...fields].join("");
+    }
+
+    function fieldText(name, label, value) {
+      return `<label class="field"><span>${label}</span><input name="${name}" type="text" value="${escapeHtml(value)}" ${name === "name" ? "required" : ""}></label>`;
+    }
+
+    function fieldNumber(name, label, value, step) {
+      return `<label class="field"><span>${label}</span><input name="${name}" type="number" min="0" step="${step}" value="${value}" required></label>`;
+    }
+
+    function fieldCheckbox(name, label) {
+      return `<label class="toggle-pill"><input name="${name}" type="checkbox"><span>${label}</span></label>`;
+    }
+
+    function fieldSelect(name, label, values) {
+      return `<label class="field"><span>${label}</span><select name="${name}">${values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("")}</select></label>`;
+    }
+
+    function addCustomPart(form) {
+      const data = Object.fromEntries(new FormData(form).entries());
+      const categoryKey = state.activeCategory;
+      const score = clamp(Number(data.score) || 72, 1, 100);
+      const base = {
+        id: `custom-${categoryKey}-${Date.now()}`,
+        brand: data.brand || "自訂",
+        name: data.name || "自訂零件",
+        price: Number(data.price) || 0,
+        detail: "自訂零件",
+        custom: true,
+        gaming: score,
+        creator: score,
+        ai: score,
+        office: score
+      };
+
+      const split = (value) => String(value || "").split("/").map((item) => item.trim()).filter(Boolean);
+      const specs = {
+        cpu: {
+          socket: data.socket,
+          memory: data.memory === "DDR4/DDR5" ? ["DDR4", "DDR5"] : [data.memory],
+          cores: Number(data.cores) || 8,
+          threads: Number(data.threads) || 16,
+          tdp: Number(data.boost) || 120,
+          boost: Number(data.boost) || 120,
+          igpu: data.igpu === "on",
+          vrmNeed: Math.min(120, Math.max(45, Number(data.boost) / 2))
+        },
+        motherboard: {
+          socket: data.socket,
+          memory: data.memory,
+          chipset: data.chipset || "自訂",
+          form: data.form,
+          m2: Number(data.m2) || 0,
+          pcie: "自訂",
+          wifi: false,
+          vrm: Number(data.vrm) || 70,
+          maxRam: 256
+        },
+        gpu: {
+          series: data.series || "自訂",
+          vram: Number(data.vram) || 0,
+          watt: Number(data.watt) || 0,
+          length: Number(data.length) || 0,
+          powerPlug: data.powerPlug || "8-pin"
+        },
+        memory: {
+          type: data.type,
+          capacity: Number(data.capacity) || 0,
+          sticks: data.sticks || "自訂",
+          speed: Number(data.speed) || 0
+        },
+        storage: {
+          type: data.type,
+          capacity: Number(data.capacity) || 0,
+          interface: data.interface || data.type
+        },
+        psu: {
+          watts: Number(data.watts) || 0,
+          efficiency: data.efficiency,
+          form: data.form,
+          atx3: data.atx3 === "on"
+        },
+        case: {
+          forms: split(data.forms),
+          psuForms: split(data.psuForms),
+          maxGpu: Number(data.maxGpu) || 0,
+          maxCooler: Number(data.maxCooler) || 0,
+          radiator: Number(data.radiator) || 0,
+          airflow: score
+        },
+        cooler: {
+          sockets: split(data.sockets),
+          capacity: Number(data.capacity) || 0,
+          height: Number(data.height) || 0,
+          radiator: Number(data.radiator) || 0
+        }
+      }[categoryKey];
+
+      const customPart = { ...base, ...specs };
+      customPart.detail = specFor(categoryKey, customPart).replaceAll("·", "/");
+      state.custom[categoryKey].push(customPart);
+      state.selected[categoryKey] = customPart.id;
+      state.filter = "all";
+      state.search = "";
+      els.partSearch.value = "";
+      saveDraftQuietly();
+      refresh({ categories: true, filters: true, list: true, selected: true });
+      showToast("已加入並選用自訂零件");
+      form.reset();
+      renderCustomFields();
+    }
+
+    function renderCompatibility(report) {
+      const danger = report.issues.filter((issue) => issue.level === "danger").length;
+      const warn = report.issues.filter((issue) => issue.level === "warn").length;
+      els.compatCount.textContent = danger ? `${danger} 個需修正` : warn ? `${warn} 個提醒` : "相容";
+      els.compatList.innerHTML = report.issues.map((issue) => `
+        <div class="status-item ${issue.level}">
+          <span class="status-dot" aria-hidden="true"></span>
+          <div>
+            <strong>${escapeHtml(issue.title)}</strong>
+            <p>${escapeHtml(issue.text)}</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderInsights(report, score) {
+      const insights = [];
+      const build = report.build;
+      const critical = report.issues.find((issue) => issue.level === "danger");
+      const budgetLeft = state.budget - report.priceData.grandTotal;
+      const gpuCpuRatio = scoreFor(build.gpu, "gaming") / Math.max(1, scoreFor(build.cpu, "gaming"));
+
+      if (critical) {
+        insights.push({ level: "danger", title: "先修正相容性", text: critical.title });
+      }
+
+      if (report.priceData.grandTotal > state.budget) {
+        insights.push({ level: "warn", title: "預算已超出", text: `先看顯示卡、主機板或儲存容量，目標降回 ${formatMoney(state.budget)} 內。` });
+      } else if (budgetLeft > 7000 && state.useCase === "gaming") {
+        insights.push({ level: "good", title: "遊戲效能還能上調", text: `預算剩 ${formatMoney(budgetLeft)}，優先升顯示卡或 CPU 會最有感。` });
+      } else if (budgetLeft > 6000 && state.useCase === "creator") {
+        insights.push({ level: "good", title: "創作可補 RAM 或 SSD", text: `預算剩 ${formatMoney(budgetLeft)}，64GB RAM 或 4TB SSD 會提升工作流。` });
+      } else if (budgetLeft > 9000 && state.useCase === "ai") {
+        insights.push({ level: "good", title: "AI 用途看顯存", text: `預算剩 ${formatMoney(budgetLeft)}，可優先升級高顯存顯卡。` });
+      }
+
+      if (state.useCase === "gaming" && build.gpu.id !== "no-gpu") {
+        if (gpuCpuRatio > 1.28) {
+          insights.push({ level: "warn", title: "CPU 可能拖住顯卡", text: "若主玩高幀率競技遊戲，可提高處理器等級。" });
+        } else if (gpuCpuRatio < 0.72) {
+          insights.push({ level: "warn", title: "顯卡低於 CPU 等級", text: "若目標是 2K 或 4K，顯示卡比 CPU 更值得加預算。" });
+        }
+      }
+
+      if (report.build.psu.watts >= report.recommended + 150) {
+        insights.push({ level: "good", title: "電源餘裕充足", text: "這套配置保留未來升級顯示卡的空間。" });
+      }
+
+      if (score >= 88 && !report.issues.some((issue) => issue.level === "danger")) {
+        insights.push({ level: "good", title: "配置平衡度高", text: "零件搭配、功耗和預算利用率都很穩。" });
+      }
+
+      if (insights.length === 0) {
+        insights.push({ level: "good", title: "配置方向穩定", text: "沒有明顯短板，可依外觀、保固和店家報價做最後選擇。" });
+      }
+
+      els.insightCount.textContent = `${insights.slice(0, 5).length} 則建議`;
+      els.insightList.innerHTML = insights.slice(0, 5).map((item) => `
+        <div class="insight ${item.level}">
+          <strong>${escapeHtml(item.title)}</strong>
+          <p>${escapeHtml(item.text)}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderPriceTable(report) {
+      const rows = report.priceData.rows.map(({ category, part, price }) => `
+        <tr>
+          <td>${category.label}</td>
+          <td>${escapeHtml(part.name)}</td>
+          <td>${escapeHtml(specFor(category.key, part))}</td>
+          <td>${formatMoney(price)}</td>
+          <td>${scoreFor(part)} / 100</td>
+        </tr>
+      `);
+
+      if (report.priceData.os > 0) {
+        rows.push(`<tr><td>軟體</td><td>Windows 授權估算</td><td>單機授權</td><td>${formatMoney(report.priceData.os)}</td><td>-</td></tr>`);
+      }
+
+      if (report.priceData.reserveAmount > 0) {
+        rows.push(`<tr><td>預留</td><td>組裝、線材或價格浮動</td><td>${state.reserve}%</td><td>${formatMoney(report.priceData.reserveAmount)}</td><td>-</td></tr>`);
+      }
+
+      rows.push(`<tr><td colspan="3"><strong>總計</strong></td><td><strong>${formatMoney(report.priceData.grandTotal)}</strong></td><td><strong>${scoreBuild(report)} / 100</strong></td></tr>`);
+      els.priceTable.innerHTML = rows.join("");
+    }
+
+    function renderCostBar(priceData) {
+      const groups = [
+        { label: "CPU", value: priceOf("cpu") },
+        { label: "GPU", value: priceOf("gpu") },
+        { label: "RAM", value: priceOf("memory") },
+        { label: "SSD", value: priceOf("storage") },
+        { label: "其他", value: priceData.subtotal - priceOf("cpu") - priceOf("gpu") - priceOf("memory") - priceOf("storage") }
+      ].filter((group) => group.value > 0);
+      const total = Math.max(1, groups.reduce((sum, group) => sum + group.value, 0));
+      els.costBar.innerHTML = groups.map((group) => `<span style="width:${Math.max(2, group.value / total * 100)}%"></span>`).join("");
+      els.barLegend.innerHTML = groups.map((group) => `<span>${group.label} ${Math.round(group.value / total * 100)}%</span>`).join("");
+    }
+
+    function updateMetrics(report = evaluate()) {
+      const score = scoreBuild(report);
+      const danger = report.issues.filter((issue) => issue.level === "danger").length;
+      const warn = report.issues.filter((issue) => issue.level === "warn").length;
+      const delta = state.budget - report.priceData.grandTotal;
+      const headroom = report.build.psu.watts - report.recommended;
+
+      document.documentElement.dataset.theme = state.theme;
+      els.themeToggle.textContent = state.theme === "dark" ? "淺色" : "深色";
+      els.useCase.value = state.useCase;
+      els.budgetRange.value = state.budget;
+      els.budgetValue.textContent = formatMoney(state.budget);
+      els.includeWindows.checked = state.includeWindows;
+      els.reserveRange.value = state.reserve;
+      els.reserveValue.textContent = `${state.reserve}%`;
+      els.sortMode.value = state.sort;
+      els.onlyCompatible.checked = state.onlyCompatible;
+
+      const compatText = danger ? "需修正" : warn ? "可改善" : "相容";
+      els.navTotal.textContent = formatMoney(report.priceData.grandTotal);
+      els.navScore.textContent = `${score} 分`;
+      els.navCompat.textContent = compatText;
+      els.navCount.textContent = `${Object.values(catalog).flat().length + Object.values(state.custom).flat().length} 件`;
+      els.heroTotal.textContent = formatMoney(report.priceData.grandTotal);
+      els.heroCompat.textContent = compatText;
+      els.heroLoad.textContent = `${report.load} W`;
+      els.heroPsu.textContent = `${report.recommended} W`;
+      els.scoreRing.style.setProperty("--score", `${score}%`);
+      els.scoreValue.textContent = score;
+      els.scoreTitle.textContent = danger ? "需要修正" : score >= 88 ? "配置很穩" : score >= 74 ? "接近平衡" : "仍可優化";
+      els.scoreCopy.textContent = danger
+        ? "先處理紅色相容性項目，再看效能或價格。"
+        : warn
+          ? "可以購買，但建議先看黃色提醒。"
+          : "這套配置在目前用途和預算下很完整。";
+      els.summaryLine.textContent = danger ? `${danger} 個相容性問題` : warn ? `${warn} 個提醒，無重大衝突` : "無重大衝突";
+      els.partsSubtotal.textContent = formatMoney(report.priceData.subtotal);
+      els.grandTotal.textContent = formatMoney(report.priceData.grandTotal);
+      els.budgetDelta.textContent = delta >= 0 ? `剩 ${formatMoney(delta)}` : `超 ${formatMoney(Math.abs(delta))}`;
+      els.budgetDelta.style.color = delta >= 0 ? "var(--green)" : "var(--red)";
+      els.psuHeadroom.textContent = headroom >= 0 ? `+${headroom} W` : `${headroom} W`;
+      els.psuHeadroom.style.color = headroom >= 0 ? "var(--green)" : "var(--red)";
+      els.databaseStatus.textContent = `已載入 ${Object.values(catalog).flat().length + Object.values(state.custom).flat().length} 件零件`;
+
+      Object.entries(presets).forEach(([key, preset]) => {
+        const button = document.querySelector(`[data-preset="${key}"]`);
+        if (!button) return;
+        button.classList.toggle("is-active", JSON.stringify(preset.selected) === JSON.stringify(state.selected));
+      });
+
+      renderCostBar(report.priceData);
+      renderCompatibility(report);
+      renderInsights(report, score);
+      renderPriceTable(report);
+    }
+
+    function updateLiveOnly() {
+      const report = evaluate();
+      updateMetrics(report);
+      renderCategoryList(report);
+      saveDraftQuietly();
+    }
+
+    function refresh(options = {}) {
+      normalizeSelection();
+      const report = evaluate();
+      updateMetrics(report);
+      if (options.categories) renderCategoryList(report);
+      if (options.filters) renderFilters();
+      if (options.list) renderPartList();
+      if (options.selected) renderSelectedPanel();
+      saveDraftQuietly();
+    }
+
+    function normalizeSelection() {
+      categories.forEach((category) => {
+        if (!allParts(category.key).some((partItem) => partItem.id === state.selected[category.key])) {
+          state.selected[category.key] = catalog[category.key][0].id;
+        }
+      });
+    }
+
+    function applyPreset(key) {
+      const preset = presets[key];
+      if (!preset) return;
+      state.useCase = preset.useCase;
+      state.budget = preset.budget;
+      state.reserve = preset.reserve;
+      state.selected = { ...preset.selected };
+      state.overrides = {};
+      state.filter = "all";
+      state.search = "";
+      els.partSearch.value = "";
+      refresh({ categories: true, filters: true, list: true, selected: true });
+      showToast(`已套用「${preset.label}」`);
+    }
+
+    function optimizeBuild() {
+      const cpuPool = rankedPool("cpu", 12);
+      const gpuPool = rankedPool("gpu", 14);
+      const memoryPool = rankedPool("memory", 8);
+      const storagePool = rankedPool("storage", 8);
+      let best = null;
+
+      for (const cpu of cpuPool) {
+        const boards = allParts("motherboard")
+          .filter((board) => board.socket === cpu.socket && cpu.memory.includes(board.memory))
+          .sort((a, b) => scoreFor(b) - scoreFor(a) || priceOf("motherboard", a) - priceOf("motherboard", b))
+          .slice(0, 8);
+        for (const motherboard of boards) {
+          for (const gpu of gpuPool) {
+            for (const memory of memoryPool.filter((item) => item.type === motherboard.memory && item.capacity <= motherboard.maxRam)) {
+              for (const storage of storagePool) {
+                const partial = {
+                  ...state.selected,
+                  cpu: cpu.id,
+                  motherboard: motherboard.id,
+                  gpu: gpu.id,
+                  memory: memory.id,
+                  storage: storage.id
+                };
+                const cooler = pickAccessory("cooler", partial);
+                if (!cooler) continue;
+                partial.cooler = cooler.id;
+                const pcCase = pickAccessory("case", partial);
+                if (!pcCase) continue;
+                partial.case = pcCase.id;
+                const psu = pickAccessory("psu", partial);
+                if (!psu) continue;
+                partial.psu = psu.id;
+
+                const report = evaluate(partial);
+                if (report.issues.some((issue) => issue.level === "danger")) continue;
+                if (report.priceData.grandTotal > state.budget) continue;
+                const candidateScore = scoreBuild(report) + valueBonus(report);
+                if (!best || candidateScore > best.score) {
+                  best = { selection: { ...partial }, report, score: candidateScore };
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (!best) {
+        showToast("目前預算內找不到完整相容配置，請提高預算或套用入門方案");
+        return;
+      }
+
+      state.selected = best.selection;
+      state.overrides = {};
+      refresh({ categories: true, filters: true, list: true, selected: true });
+      showToast(`已找到 ${formatMoney(best.report.priceData.grandTotal)} 的相容配置`);
+    }
+
+    function rankedPool(categoryKey, limit) {
+      return allParts(categoryKey)
+        .map((partItem) => ({ part: partItem, rank: scoreFor(partItem) - Math.min(18, priceOf(categoryKey, partItem) / 15000) }))
+        .sort((a, b) => b.rank - a.rank)
+        .slice(0, limit)
+        .map((item) => item.part);
+    }
+
+    function pickAccessory(categoryKey, selection) {
+      return allParts(categoryKey)
+        .map((partItem) => ({
+          part: partItem,
+          report: evaluate({ ...selection, [categoryKey]: partItem.id }, { includeBudget: false })
+        }))
+        .filter((item) => !item.report.issues.some((issue) => issue.level === "danger" && issue.categories.includes(categoryKey)))
+        .sort((a, b) => {
+          const scoreA = scoreFor(a.part) - Math.min(14, priceOf(categoryKey, a.part) / 8000);
+          const scoreB = scoreFor(b.part) - Math.min(14, priceOf(categoryKey, b.part) / 8000);
+          return scoreB - scoreA;
+        })[0]?.part;
+    }
+
+    function valueBonus(report) {
+      const weighted = categories.reduce((sum, category) => sum + scoreFor(report.build[category.key]) * (category.key === "gpu" ? 0.32 : category.key === "cpu" ? 0.24 : 0.07), 0);
+      return clamp(weighted / Math.max(1, report.priceData.grandTotal / 10000), 0, 16);
+    }
+
+    function fixCompatibility() {
+      let selection = { ...state.selected };
+      let changed = false;
+      const order = ["motherboard", "memory", "cooler", "case", "psu", "gpu"];
+      for (const categoryKey of order) {
+        const currentReport = evaluate(selection, { includeBudget: false });
+        const needsFix = currentReport.issues.some((issue) => issue.level === "danger" && issue.categories.includes(categoryKey));
+        if (!needsFix) continue;
+        const candidate = allParts(categoryKey)
+          .map((partItem) => ({ part: partItem, report: evaluate({ ...selection, [categoryKey]: partItem.id }, { includeBudget: false }) }))
+          .filter((item) => !item.report.issues.some((issue) => issue.level === "danger" && issue.categories.includes(categoryKey)))
+          .sort((a, b) => priceOf(categoryKey, a.part) - priceOf(categoryKey, b.part) || scoreFor(b.part) - scoreFor(a.part))[0]?.part;
+        if (candidate) {
+          selection[categoryKey] = candidate.id;
+          changed = true;
+        }
+      }
+      if (changed) {
+        state.selected = selection;
+        refresh({ categories: true, filters: true, list: true, selected: true });
+        showToast("已嘗試修正相容性");
+      } else {
+        showToast("目前沒有可自動修正的相容性問題");
+      }
+    }
+
+    function buildText() {
+      const report = evaluate();
+      const lines = report.priceData.rows.map(({ category, part, price }) => `${category.label}: ${part.name} - ${formatMoney(price)} (${specFor(category.key, part)})`);
+      if (report.priceData.os > 0) lines.push(`軟體: Windows 授權估算 - ${formatMoney(report.priceData.os)}`);
+      if (report.priceData.reserveAmount > 0) lines.push(`預留: 價格浮動 ${state.reserve}% - ${formatMoney(report.priceData.reserveAmount)}`);
+      lines.push("");
+      lines.push(`總價: ${formatMoney(report.priceData.grandTotal)}`);
+      lines.push(`預算: ${formatMoney(state.budget)}`);
+      lines.push(`適合度: ${scoreBuild(report)} / 100`);
+      lines.push(`預估負載: ${report.load}W`);
+      lines.push(`建議電源: ${report.recommended}W`);
+      lines.push(`相容性: ${report.issues.map((issue) => issue.title).join(" / ")}`);
+      lines.push("");
+      lines.push("價格為規劃估算，請依購買當天報價更新。");
+      return lines.join("\n");
+    }
+
+    async function copyBuild() {
+      const text = buildText();
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+        }
+        showToast("已複製配置清單");
+      } catch (error) {
+        showToast("無法自動複製，可改用下載報價");
+      }
+    }
+
+    function downloadBuild() {
+      const blob = new Blob([buildText()], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `pc-build-${new Date().toISOString().slice(0, 10)}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast("已下載配置清單");
+    }
+
+    function saveDraftQuietly() {
+      try {
+        localStorage.setItem("pc-configurator-v2", JSON.stringify(state));
+      } catch (error) {
+        return;
+      }
+    }
+
+    function loadDraft() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("pc-configurator-v2"));
+        if (!saved) return;
+        Object.assign(state, clone(defaultState), saved);
+        state.custom = { ...emptyCustomCatalog(), ...(saved.custom || {}) };
+      } catch (error) {
+        return;
+      }
+    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => els.toast.classList.remove("show"), 2200);
+    }
+
+    function bindEvents() {
+      document.addEventListener("click", (event) => {
+        const presetButton = event.target.closest("[data-preset]");
+        if (presetButton) {
+          applyPreset(presetButton.dataset.preset);
+          return;
+        }
+
+        const categoryButton = event.target.closest("[data-category-tab]");
+        if (categoryButton) {
+          state.activeCategory = categoryButton.dataset.categoryTab;
+          state.filter = "all";
+          state.search = "";
+          els.partSearch.value = "";
+          refresh({ categories: true, filters: true, list: true, selected: true });
+          return;
+        }
+
+        const filterButton = event.target.closest("[data-filter]");
+        if (filterButton) {
+          state.filter = filterButton.dataset.filter;
+          refresh({ filters: true, list: true });
+          return;
+        }
+
+        const partButton = event.target.closest("[data-select-part]");
+        if (partButton) {
+          state.selected[state.activeCategory] = partButton.dataset.selectPart;
+          refresh({ categories: true, list: true, selected: true });
+        }
+      });
+
+      els.themeToggle.addEventListener("click", () => {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        refresh();
+      });
+      els.optimizeBuild.addEventListener("click", optimizeBuild);
+      els.fixBuild.addEventListener("click", fixCompatibility);
+      els.useCase.addEventListener("change", () => {
+        state.useCase = els.useCase.value;
+        refresh({ categories: true, filters: true, list: true, selected: true });
+      });
+      els.budgetRange.addEventListener("input", () => {
+        state.budget = Number(els.budgetRange.value);
+        refresh({ categories: true, list: true });
+      });
+      els.reserveRange.addEventListener("input", () => {
+        state.reserve = Number(els.reserveRange.value);
+        updateLiveOnly();
+      });
+      els.includeWindows.addEventListener("change", () => {
+        state.includeWindows = els.includeWindows.checked;
+        updateLiveOnly();
+      });
+      els.partSearch.addEventListener("input", () => {
+        state.search = els.partSearch.value;
+        renderPartList();
+      });
+      els.sortMode.addEventListener("change", () => {
+        state.sort = els.sortMode.value;
+        renderPartList();
+        saveDraftQuietly();
+      });
+      els.onlyCompatible.addEventListener("change", () => {
+        state.onlyCompatible = els.onlyCompatible.checked;
+        renderPartList();
+        saveDraftQuietly();
+      });
+      els.customForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        addCustomPart(els.customForm);
+      });
+      els.clearCustomParts.addEventListener("click", () => {
+        state.custom[state.activeCategory] = [];
+        normalizeSelection();
+        refresh({ categories: true, filters: true, list: true, selected: true });
+        showToast("已清除本分類自訂零件");
+      });
+      els.copyBuild.addEventListener("click", copyBuild);
+      els.downloadBuild.addEventListener("click", downloadBuild);
+      els.saveBuild.addEventListener("click", () => {
+        saveDraftQuietly();
+        showToast("已儲存到這個瀏覽器");
+      });
+      els.printBuild.addEventListener("click", () => window.print());
+    }
+
+    loadDraft();
+    normalizeSelection();
+    renderPresets();
+    bindEvents();
+    renderCategoryList();
+    renderFilters();
+    renderPartList();
+    renderCustomFields();
+    renderSelectedPanel();
+    refresh({ categories: true });
+  </script>
+</body>
+</html>
